@@ -78,7 +78,7 @@ export function ChecklistItem({ item, onToggleComplete, isInitiallyCompleted }: 
     }
 
     if (hasSteps) {
-      router.push(`/task/${item.slug}`);
+      router.push(`/${item.slug}`);
     } else {
       onToggleComplete(item.id);
     }
