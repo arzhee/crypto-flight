@@ -7,7 +7,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "1",
     "name": "Learn About Crypto",
     "Icon": PlayCircle,
-    "text": "Dive into the world of cryptocurrency and grasp its basic concepts and mechanics.",
+    "text": "Grasp core cryptocurrency concepts and how digital currencies function.",
     "steps": [
       {
         "id": "1-step-1",
@@ -28,7 +28,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "2",
     "name": "Understand Bitcoin",
     "Icon": Bitcoin,
-    "text": "Explore Bitcoin, the pioneering cryptocurrency, and learn about its significance and origins.",
+    "text": "Discover Bitcoin's origins, its role as the first cryptocurrency, and its impact.",
     "steps": [
       {
         "id": "2-step-1",
@@ -49,7 +49,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "3",
     "name": "Creating Crypto Wallet from Argent Mobile",
     "Icon": WalletCards,
-    "text": "Set up your Argent mobile wallet, your key to accessing the Starknet blockchain and its apps.",
+    "text": "Set up your Argent mobile wallet to interact with the Starknet blockchain.",
     "steps": [
       {
         "id": "3-step-1",
@@ -146,7 +146,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "4",
     "name": "Creating Crypto Wallet from Rabby Mobile",
     "Icon": WalletCards,
-    "text": "Create your Rabby mobile wallet, opening doors to the vast EVM (Ethereum-compatible) ecosystem.",
+    "text": "Create your Rabby mobile wallet, opening doors to the vast Ethereum (Ethereum-compatible) ecosystem.",
     "steps": [
       {
         "id": "4-step-1",
@@ -210,7 +210,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "5",
     "name": "Frequently Asked Questions (FAQs) in Crypto",
     "Icon": HelpCircle,
-    "text": "Get answers to common questions about cryptocurrency to build your foundational knowledge.",
+    "text": "Find answers to common crypto questions and solidify your understanding.",
     "steps": [
       {
         "id": "5-step-1",
@@ -353,7 +353,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "6",
     "name": "Buying Crypto From Ramp Network",
     "Icon": ShoppingBag,
-    "text": "Discover how to purchase cryptocurrency using Ramp Network, a popular on-ramp service.",
+    "text": "Learn to buy crypto using Ramp Network, a service for converting traditional money.",
     "steps": [
       {
         "id": "6-step-1",
@@ -518,7 +518,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "7",
     "name": "Buying Crypto From Transak using Gcash",
     "Icon": CreditCard,
-    "text": "Learn to buy cryptocurrency via Transak using Gcash, a convenient local payment method.",
+    "text": "Purchase crypto via Transak using Gcash for a localized payment experience.",
     "steps": [
       {
         "id": "7-step-1",
@@ -660,7 +660,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "8",
     "name": "Bridging Crypto From Argent Mobile",
     "Icon": ArrowRightLeft,
-    "text": "Understand how to transfer your crypto assets between different blockchains using Argent Mobile's bridging feature.",
+    "text": "Move crypto assets across different blockchains using Argent Mobile's bridging capabilities.",
     "steps": [
       {
         "id": "8-step-1",
@@ -722,7 +722,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "9",
     "name": "Creating a RealT Account",
     "Icon": User,
-    "text": "Set up your RealT account to begin exploring tokenized real estate investments.",
+    "text": "Register on RealT to explore fractional real estate investments via tokens.",
     "steps": [
       {
         "id": "9-step-1",
@@ -915,7 +915,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "10",
     "name": "Buying a Property from RealT",
     "Icon": Home,
-    "text": "Walk through the process of purchasing your first tokenized property share on RealT.",
+    "text": "Navigate the process of acquiring your first tokenized property on RealT.",
     "steps": [
       {
         "id": "10-step-1",
@@ -1135,7 +1135,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "11",
     "name": "Signing Contracts from RealT",
     "Icon": FileText,
-    "text": "Understand the final steps of securing your RealT property by digitally signing the necessary contracts.",
+    "text": "Complete your RealT property purchase by digitally signing the required contracts.",
     "steps": [
       {
         "id": "11-step-1",
@@ -1219,7 +1219,7 @@ export const initialChecklistItems: ChecklistItem[] =[
     "id": "12",
     "name": "Welcome, Crypto Native!",
     "Icon": PartyPopper,
-    "text": "Congratulations! You've mastered the basics and are now equipped to navigate the exciting world of crypto.",
+    "text": "You've successfully completed your initial crypto flight—congratulations!",
     "steps": [
       {
         "id": "12-step-1",
