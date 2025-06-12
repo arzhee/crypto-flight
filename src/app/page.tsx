@@ -1,5 +1,6 @@
 
 import { AppHeader, ChecklistContainer } from '@/components/crypto-pilot';
+import { AppFooter } from '@/components/layout';
 
 export default function CryptoPilotPage() {
   return (
@@ -8,10 +9,7 @@ export default function CryptoPilotPage() {
         <AppHeader />
         <ChecklistContainer />
       </div>
-      <footer className="mt-12 text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} Crypto Flight. Embark on your crypto journey.</p>
-        <p className="mt-1">Created by <a href="https://arzh.ee" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">arzhee</a> with ❤️</p>
-      </footer>
+      <AppFooter />
     </main>
   );
 }

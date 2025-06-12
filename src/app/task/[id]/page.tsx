@@ -15,7 +15,7 @@ import NextImage from 'next/image';
 import { AppHeader } from '@/components/crypto-pilot/AppHeader';
 import { CryptoPilotProgressBar } from '@/components/crypto-pilot/ProgressBar';
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Separator } from '@/components/ui/separator';
+import { AppFooter } from '@/components/layout';
 
 const getYouTubeEmbedUrl = (url: string): string | null => {
   if (!url || typeof url !== 'string') return null;
@@ -334,7 +334,10 @@ export default function TaskDetailPage() {
                           {step.images && step.images.length > 0 && (
                             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
                               {step.images.map((imageUrl, index) => {
-                                const aiHint = "task image";
+                                let aiHintForImage = "task illustration";
+                                if (imageUrl.startsWith('https://placehold.co')) {
+                                  aiHintForImage = "placeholder image";
+                                }
                                 return (
                                   <TaskStepImage
                                     key={`${step.id}-image-${index}`}
@@ -342,7 +345,7 @@ export default function TaskDetailPage() {
                                     altText={`Step image ${index + 1}`}
                                     onImageClick={handleImageClick}
                                     priority={index < 2}
-                                    aiHint={aiHint}
+                                    aiHint={aiHintForImage}
                                   />
                                 );
                               })}
@@ -412,10 +415,7 @@ export default function TaskDetailPage() {
           )}
         </DialogContent>
       </Dialog>
-      <footer className="mt-12 text-center text-sm text-muted-foreground">
-        <p>&copy; {new Date().getFullYear()} Crypto Flight. Embark on your crypto journey.</p>
-        <p className="mt-1">Created by <a href="https://arzh.ee" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">arzhee</a> with ❤️</p>
-      </footer>
+      <AppFooter />
     </main>
   );
 }
