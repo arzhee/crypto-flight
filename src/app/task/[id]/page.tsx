@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info } from 'lucide-react';
+import { Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import NextImage from 'next/image';
 import { AppHeader } from '@/components/crypto-pilot/AppHeader';
 import { CryptoPilotProgressBar } from '@/components/crypto-pilot/ProgressBar';
@@ -74,7 +74,7 @@ const formatCitation = (text: string): string => {
 interface TaskStepImageProps {
   imageUrl: string;
   altText: string;
-  onImageClick: (url: string, event: React.MouseEvent) => void;
+  onImageClick: (imageUrlFromStepImage: string, event: React.MouseEvent) => void;
   priority: boolean;
   aiHint: string;
 }
@@ -127,6 +127,9 @@ export default function TaskDetailPage() {
 
   const [zoomedImageUrl, setZoomedImageUrl] = useState<string | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [currentStepImages, setCurrentStepImages] = useState<string[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -218,11 +221,35 @@ export default function TaskDetailPage() {
     handleToggleStep(stepId);
   };
 
-  const handleImageClick = (imageUrl: string, event: React.MouseEvent) => {
-    event.stopPropagation(); 
-    setZoomedImageUrl(imageUrl);
+  const handleImageClick = (clickedImageUrl: string, stepId: string, imageIndexInStepArray: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const currentTaskStep = task?.steps?.find(s => s.id === stepId);
+    const imagesForStep = currentTaskStep?.images || [];
+    
+    setCurrentStepImages(imagesForStep);
+    setCurrentImageIndex(imageIndexInStepArray);
+    setZoomedImageUrl(clickedImageUrl);
     setIsImageModalOpen(true);
   };
+  
+  const handlePrevImage = () => {
+    if (!currentStepImages || currentStepImages.length === 0) return;
+    setCurrentImageIndex((prevIndex) => {
+      const newIndex = (prevIndex - 1 + currentStepImages.length) % currentStepImages.length;
+      setZoomedImageUrl(currentStepImages[newIndex]);
+      return newIndex;
+    });
+  };
+  
+  const handleNextImage = () => {
+    if (!currentStepImages || currentStepImages.length === 0) return;
+    setCurrentImageIndex((prevIndex) => {
+      const newIndex = (prevIndex + 1) % currentStepImages.length;
+      setZoomedImageUrl(currentStepImages[newIndex]);
+      return newIndex;
+    });
+  };
+
 
   const handleCompleteMainTask = () => {
     if (task && isMounted) {
@@ -334,16 +361,13 @@ export default function TaskDetailPage() {
                           {step.images && step.images.length > 0 && (
                             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
                               {step.images.map((imageUrl, index) => {
-                                let aiHintForImage = "task illustration";
-                                if (imageUrl.startsWith('https://placehold.co')) {
-                                  aiHintForImage = "placeholder image";
-                                }
+                                let aiHintForImage = imageUrl.startsWith('https://placehold.co') ? "placeholder image" : "task illustration";
                                 return (
                                   <TaskStepImage
                                     key={`${step.id}-image-${index}`}
                                     imageUrl={imageUrl}
                                     altText={`Step image ${index + 1}`}
-                                    onImageClick={handleImageClick}
+                                    onImageClick={(imgUrl, e) => handleImageClick(imgUrl, step.id, index, e)}
                                     priority={index < 2}
                                     aiHint={aiHintForImage}
                                   />
@@ -404,14 +428,43 @@ export default function TaskDetailPage() {
         </Card>
       </div>
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
-        <DialogContent className="max-w-3xl w-[90vw] max-h-[90vh] p-2 sm:p-4 flex items-center justify-center bg-background/90 backdrop-blur-sm">
+        <DialogContent className="max-w-3xl w-[90vw] max-h-[90vh] p-2 sm:p-4 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
           <DialogTitle className="sr-only">Zoomed Task Image</DialogTitle>
-          {zoomedImageUrl && (
-             <img 
-                src={zoomedImageUrl} 
-                alt="Zoomed task image" 
-                className="max-w-full max-h-[85vh] object-contain rounded-md shadow-lg"
-             />
+          {zoomedImageUrl && currentStepImages && currentStepImages.length > 0 && (
+            <div className="relative w-full h-full flex items-center justify-center">
+              {currentStepImages.length > 1 && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 bg-background/50 hover:bg-background/75 text-foreground p-1"
+                  onClick={handlePrevImage}
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Button>
+              )}
+              <img 
+                  src={zoomedImageUrl} 
+                  alt={`Zoomed task image ${currentImageIndex + 1} of ${currentStepImages.length}`}
+                  className="max-w-full max-h-[80vh] object-contain rounded-md shadow-lg"
+              />
+              {currentStepImages.length > 1 && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 bg-background/50 hover:bg-background/75 text-foreground p-1"
+                  onClick={handleNextImage}
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Button>
+              )}
+            </div>
+          )}
+          {currentStepImages && currentStepImages.length > 1 && zoomedImageUrl && (
+            <div className="absolute bottom-2 sm:bottom-4 text-center text-xs sm:text-sm text-foreground/80 bg-background/70 px-2 py-1 rounded-md">
+              {currentImageIndex + 1} / {currentStepImages.length}
+            </div>
           )}
         </DialogContent>
       </Dialog>
@@ -419,3 +472,5 @@ export default function TaskDetailPage() {
     </main>
   );
 }
+
+    
