@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import type { ChecklistItem as ChecklistItemType, TaskStep } from '@/types';
 import { initialChecklistItems as allAppChecklistItems } from '@/constants/checklistData';
@@ -131,7 +131,9 @@ export default function TaskDetailPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [imageAnimationClass, setImageAnimationClass] = useState('');
   const [isImageAnimating, setIsImageAnimating] = useState(false);
-  const animationDuration = 300; // Corresponds to 0.3s in Tailwind config
+  const animationDuration = 300; 
+
+  const touchStartXRef = useRef(0);
 
 
   useEffect(() => {
@@ -232,12 +234,12 @@ export default function TaskDetailPage() {
     setCurrentStepImages(imagesForStep);
     setCurrentImageIndex(imageIndexInStepArray);
     setZoomedImageUrl(clickedImageUrl);
-    setImageAnimationClass(''); // Reset animation class on new image open
+    setImageAnimationClass(''); 
     setIsImageModalOpen(true);
   };
   
-  const handlePrevImage = () => {
-    if (!currentStepImages || currentStepImages.length === 0 || isImageAnimating) return;
+  const handlePrevImage = useCallback(() => {
+    if (!currentStepImages || currentStepImages.length <= 1 || isImageAnimating) return;
     setIsImageAnimating(true);
     setImageAnimationClass('animate-slide-out-right');
 
@@ -253,10 +255,10 @@ export default function TaskDetailPage() {
         setIsImageAnimating(false);
       }, animationDuration);
     }, animationDuration);
-  };
+  }, [currentStepImages, isImageAnimating, animationDuration]);
   
-  const handleNextImage = () => {
-    if (!currentStepImages || currentStepImages.length === 0 || isImageAnimating) return;
+  const handleNextImage = useCallback(() => {
+    if (!currentStepImages || currentStepImages.length <= 1 || isImageAnimating) return;
     setIsImageAnimating(true);
     setImageAnimationClass('animate-slide-out-left');
 
@@ -272,6 +274,27 @@ export default function TaskDetailPage() {
         setIsImageAnimating(false);
       }, animationDuration);
     }, animationDuration);
+  }, [currentStepImages, isImageAnimating, animationDuration]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (isImageAnimating || (currentStepImages && currentStepImages.length <= 1)) return;
+    touchStartXRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === 0 || isImageAnimating || (currentStepImages && currentStepImages.length <= 1)) {
+      return;
+    }
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchStartXRef.current - touchEndX;
+    const swipeThreshold = 50; // Minimum distance for a swipe
+
+    if (deltaX > swipeThreshold) {
+      handleNextImage();
+    } else if (deltaX < -swipeThreshold) {
+      handlePrevImage();
+    }
+    touchStartXRef.current = 0; // Reset for next swipe
   };
 
 
@@ -455,7 +478,11 @@ export default function TaskDetailPage() {
         <DialogContent className="max-w-3xl w-[90vw] max-h-[90vh] p-2 sm:p-4 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
           <DialogTitle className="sr-only">Zoomed Task Image</DialogTitle>
           {zoomedImageUrl && currentStepImages && currentStepImages.length > 0 && (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+            <div 
+              className="relative w-full h-full flex items-center justify-center overflow-hidden"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               {currentStepImages.length > 1 && (
                 <Button
                   variant="ghost"
@@ -472,6 +499,7 @@ export default function TaskDetailPage() {
                   src={zoomedImageUrl} 
                   alt={`Zoomed task image ${currentImageIndex + 1} of ${currentStepImages.length}`}
                   className={`max-w-full max-h-[80vh] object-contain rounded-md shadow-lg ${imageAnimationClass}`}
+                  draggable="false" 
               />
               {currentStepImages.length > 1 && (
                 <Button
@@ -498,3 +526,4 @@ export default function TaskDetailPage() {
     </main>
   );
 }
+
