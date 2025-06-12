@@ -129,6 +129,9 @@ export default function TaskDetailPage() {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentStepImages, setCurrentStepImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [imageAnimationClass, setImageAnimationClass] = useState('');
+  const [isImageAnimating, setIsImageAnimating] = useState(false);
+  const animationDuration = 300; // Corresponds to 0.3s in Tailwind config
 
 
   useEffect(() => {
@@ -229,25 +232,46 @@ export default function TaskDetailPage() {
     setCurrentStepImages(imagesForStep);
     setCurrentImageIndex(imageIndexInStepArray);
     setZoomedImageUrl(clickedImageUrl);
+    setImageAnimationClass(''); // Reset animation class on new image open
     setIsImageModalOpen(true);
   };
   
   const handlePrevImage = () => {
-    if (!currentStepImages || currentStepImages.length === 0) return;
-    setCurrentImageIndex((prevIndex) => {
-      const newIndex = (prevIndex - 1 + currentStepImages.length) % currentStepImages.length;
-      setZoomedImageUrl(currentStepImages[newIndex]);
-      return newIndex;
-    });
+    if (!currentStepImages || currentStepImages.length === 0 || isImageAnimating) return;
+    setIsImageAnimating(true);
+    setImageAnimationClass('animate-slide-out-right');
+
+    setTimeout(() => {
+      setCurrentImageIndex((prevIndex) => {
+        const newIndex = (prevIndex - 1 + currentStepImages.length) % currentStepImages.length;
+        setZoomedImageUrl(currentStepImages[newIndex]);
+        setImageAnimationClass('animate-slide-in-from-left');
+        return newIndex;
+      });
+      setTimeout(() => {
+        setImageAnimationClass('');
+        setIsImageAnimating(false);
+      }, animationDuration);
+    }, animationDuration);
   };
   
   const handleNextImage = () => {
-    if (!currentStepImages || currentStepImages.length === 0) return;
-    setCurrentImageIndex((prevIndex) => {
-      const newIndex = (prevIndex + 1) % currentStepImages.length;
-      setZoomedImageUrl(currentStepImages[newIndex]);
-      return newIndex;
-    });
+    if (!currentStepImages || currentStepImages.length === 0 || isImageAnimating) return;
+    setIsImageAnimating(true);
+    setImageAnimationClass('animate-slide-out-left');
+
+    setTimeout(() => {
+      setCurrentImageIndex((prevIndex) => {
+        const newIndex = (prevIndex + 1) % currentStepImages.length;
+        setZoomedImageUrl(currentStepImages[newIndex]);
+        setImageAnimationClass('animate-slide-in-from-right');
+        return newIndex;
+      });
+      setTimeout(() => {
+        setImageAnimationClass('');
+        setIsImageAnimating(false);
+      }, animationDuration);
+    }, animationDuration);
   };
 
 
@@ -431,13 +455,14 @@ export default function TaskDetailPage() {
         <DialogContent className="max-w-3xl w-[90vw] max-h-[90vh] p-2 sm:p-4 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
           <DialogTitle className="sr-only">Zoomed Task Image</DialogTitle>
           {zoomedImageUrl && currentStepImages && currentStepImages.length > 0 && (
-            <div className="relative w-full h-full flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
               {currentStepImages.length > 1 && (
                 <Button
                   variant="ghost"
                   size="icon"
                   className="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 bg-background/50 hover:bg-background/75 text-foreground p-1"
                   onClick={handlePrevImage}
+                  disabled={isImageAnimating}
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -446,7 +471,7 @@ export default function TaskDetailPage() {
               <img 
                   src={zoomedImageUrl} 
                   alt={`Zoomed task image ${currentImageIndex + 1} of ${currentStepImages.length}`}
-                  className="max-w-full max-h-[80vh] object-contain rounded-md shadow-lg"
+                  className={`max-w-full max-h-[80vh] object-contain rounded-md shadow-lg ${imageAnimationClass}`}
               />
               {currentStepImages.length > 1 && (
                 <Button
@@ -454,6 +479,7 @@ export default function TaskDetailPage() {
                   size="icon"
                   className="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 bg-background/50 hover:bg-background/75 text-foreground p-1"
                   onClick={handleNextImage}
+                  disabled={isImageAnimating}
                   aria-label="Next image"
                 >
                   <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -472,5 +498,3 @@ export default function TaskDetailPage() {
     </main>
   );
 }
-
-    
