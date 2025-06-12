@@ -5,6 +5,7 @@ import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, Use
 export const initialChecklistItems: ChecklistItem[] =[
   {
     "id": "1",
+    "slug": "learn-about-crypto",
     "name": "Learn About Crypto",
     "Icon": PlayCircle,
     "text": "Grasp core cryptocurrency concepts and how digital currencies function.",
@@ -26,6 +27,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "2",
+    "slug": "understand-bitcoin",
     "name": "Understand Bitcoin",
     "Icon": Bitcoin,
     "text": "Discover Bitcoin's origins, its role as the first cryptocurrency, and its impact.",
@@ -47,6 +49,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "3",
+    "slug": "creating-crypto-wallet-from-argent-mobile",
     "name": "Creating Crypto Wallet from Argent Mobile",
     "Icon": WalletCards,
     "text": "Set up your Argent mobile wallet to interact with the Starknet blockchain.",
@@ -144,14 +147,15 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "4",
+    "slug": "creating-crypto-wallet-from-rabby-mobile",
     "name": "Creating Crypto Wallet from Rabby Mobile",
     "Icon": WalletCards,
-    "text": "Create your Rabby mobile wallet, opening doors to the vast Ethereum (Ethereum-compatible) ecosystem.",
+    "text": "Create your Rabby mobile wallet, opening doors to the vast Ethereum ecosystem.",
     "steps": [
       {
         "id": "4-step-1",
         "texts": [
-          "From the Play Store (for Android) or from the wallet Store (for iOS), search for the 'Rabby Wallet - Crypto & EVM' app then select the 'Install' button."
+          "From the Play Store (for Android) or from the wallet Store (for iOS), search for the 'Rabby Wallet - Crypto & Ethereum' app then select the 'Install' button."
         ],
         "videos": [],
         "images": [
@@ -208,6 +212,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "5",
+    "slug": "frequently-asked-questions-faqs-in-crypto",
     "name": "Frequently Asked Questions (FAQs) in Crypto",
     "Icon": HelpCircle,
     "text": "Find answers to common crypto questions and solidify your understanding.",
@@ -351,6 +356,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "6",
+    "slug": "buying-crypto-from-ramp-network",
     "name": "Buying Crypto From Ramp Network",
     "Icon": ShoppingBag,
     "text": "Learn to buy crypto using Ramp Network, a service for converting traditional money.",
@@ -516,6 +522,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "7",
+    "slug": "buying-crypto-from-transak-using-gcash",
     "name": "Buying Crypto From Transak using Gcash",
     "Icon": CreditCard,
     "text": "Purchase crypto via Transak using Gcash for a localized payment experience.",
@@ -658,6 +665,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "8",
+    "slug": "bridging-crypto-from-argent-mobile",
     "name": "Bridging Crypto From Argent Mobile",
     "Icon": ArrowRightLeft,
     "text": "Move crypto assets across different blockchains using Argent Mobile's bridging capabilities.",
@@ -720,6 +728,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "9",
+    "slug": "creating-a-realt-account",
     "name": "Creating a RealT Account",
     "Icon": User,
     "text": "Register on RealT to explore fractional real estate investments via tokens.",
@@ -913,6 +922,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "10",
+    "slug": "buying-a-property-from-realt",
     "name": "Buying a Property from RealT",
     "Icon": Home,
     "text": "Navigate the process of acquiring your first tokenized property on RealT.",
@@ -1133,6 +1143,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "11",
+    "slug": "signing-contracts-from-realt",
     "name": "Signing Contracts from RealT",
     "Icon": FileText,
     "text": "Complete your RealT property purchase by digitally signing the required contracts.",
@@ -1217,6 +1228,7 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "12",
+    "slug": "welcome-crypto-native",
     "name": "Welcome, Crypto Native!",
     "Icon": PartyPopper,
     "text": "You've successfully completed your initial crypto flight—congratulations!",
@@ -1237,4 +1249,3 @@ export const initialChecklistItems: ChecklistItem[] =[
     ]
   }
 ];
-

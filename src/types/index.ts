@@ -13,6 +13,7 @@ export interface TaskStep {
 
 export interface ChecklistItem {
   id: string; // e.g., "1", "2"
+  slug: string; // e.g., "learn-about-crypto"
   name: string; // The main title of the task (formerly title)
   Icon: LucideIcon | React.FC<React.SVGProps<SVGSVGElement>>; // Lucide icon component
   text: string; // The main description text for the task (formerly description)

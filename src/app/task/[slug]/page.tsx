@@ -12,8 +12,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import NextImage from 'next/image';
-import { AppHeader } from '@/components/crypto-pilot/AppHeader';
-import { CryptoPilotProgressBar } from '@/components/crypto-pilot/ProgressBar';
+import { AppHeader } from '@/components/crypto-flight/AppHeader';
+import { CryptoFlightProgressBar } from '@/components/crypto-flight/ProgressBar';
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { AppFooter } from '@/components/layout';
 
@@ -116,7 +116,7 @@ const TaskStepImage: React.FC<TaskStepImageProps> = ({ imageUrl, altText, onImag
 export default function TaskDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const taskId = typeof params.id === 'string' ? params.id : undefined;
+  const taskSlug = typeof params.slug === 'string' ? params.slug : undefined;
 
   const [task, setTask] = useState<ChecklistItemType | null>(null);
   const [stepCompletions, setStepCompletions] = useState<StepCompletionState>({});
@@ -141,12 +141,12 @@ export default function TaskDetailPage() {
   }, []);
 
   useEffect(() => {
-    if (isMounted && taskId) {
-      const foundTask = allAppChecklistItems.find(item => item.id === taskId);
+    if (isMounted && taskSlug) {
+      const foundTask = allAppChecklistItems.find(item => item.slug === taskSlug);
       if (foundTask) {
         setTask(foundTask);
         try {
-          const storedStepCompletionsJSON = localStorage.getItem(`${LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX}${taskId}`);
+          const storedStepCompletionsJSON = localStorage.getItem(`${LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX}${foundTask.id}`);
           let initialCompletions: StepCompletionState = {};
 
           if (storedStepCompletionsJSON) {
@@ -184,7 +184,7 @@ export default function TaskDetailPage() {
         setTotalTaskCount(allAppChecklistItems.length); 
       }
     }
-  }, [taskId, router, isMounted]);
+  }, [taskSlug, router, isMounted]);
 
 
   useEffect(() => {
@@ -331,7 +331,7 @@ export default function TaskDetailPage() {
     <main className="min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="w-full max-w-2xl">
         <AppHeader />
-        <CryptoPilotProgressBar currentStep={completedTaskCount} totalSteps={totalTaskCount} />
+        <CryptoFlightProgressBar currentStep={completedTaskCount} totalSteps={totalTaskCount} />
         
         <Card className="shadow-xl w-full mt-6 flex flex-col max-h-[calc(100vh-14rem)] sm:max-h-[calc(100vh-12rem)]">
           <CardHeader className="flex flex-row items-start space-x-4 p-4 sm:p-6">
@@ -526,4 +526,3 @@ export default function TaskDetailPage() {
     </main>
   );
 }
-
