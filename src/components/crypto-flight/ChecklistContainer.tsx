@@ -119,7 +119,7 @@ export function ChecklistContainer() {
           </div>
           <div className="w-full h-3 bg-muted rounded-full" />
         </div>
-        {[...Array(3)].map((_, i) => (
+        {[...Array(12)].map((_, i) => (
           <div key={i} className="mb-4 p-6 bg-card rounded-lg shadow-md animate-pulse">
             <div className="h-6 bg-muted rounded w-3/4 mb-3"></div>
             <div className="h-4 bg-muted rounded w-full mb-2"></div>

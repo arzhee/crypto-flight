@@ -1228,10 +1228,10 @@ export const initialChecklistItems: ChecklistItem[] =[
   },
   {
     "id": "12",
-    "slug": "welcome-crypto-native",
-    "name": "Welcome, Crypto Native!",
+    "slug": "welcome-aboard-crypto-native",
+    "name": "Welcome aboard, Crypto Native!",
     "Icon": PartyPopper,
-    "text": "You've successfully completed your initial crypto flight—congratulations!",
+    "text": "You've successfully completed your initial crypto flight, congratulations!",
     "steps": [
       {
         "id": "12-step-1",
