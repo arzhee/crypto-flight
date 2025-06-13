@@ -125,10 +125,12 @@ export function RecursiveChecklistItem({
   onNavigate,
   isStandaloneItem = false,
 }: RecursiveChecklistItemProps) {
-  const [isExpanded, setIsExpanded] = useState(level === 0 && displayContext === 'detailPage' && !isStandaloneItem);
+  const [isExpanded, setIsExpanded] = useState(
+    (displayContext === 'detailPage' && level === 0 && !isStandaloneItem) || // Auto-expand top-level items on detail page
+    (task.tasks && task.tasks.length > 0 && task.tasks.every(st => taskCompletionStates[st.id])) // Auto-expand if all sub-tasks are complete
+  );
 
   const ActualIcon = task.icon;
-
   const taskTitle = task.name || (task.texts && task.texts.length > 0 ? task.texts[0] : 'Unnamed Task');
   
   const contentTexts = task.name || !(task.texts && task.texts.length > 0 && task.texts[0] === taskTitle)
@@ -142,19 +144,16 @@ export function RecursiveChecklistItem({
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     if (target.closest('[data-image-zoomable="true"]') || target.closest('a') ||
-        target.closest('button.expander-button') || target.closest('[role="checkbox"]')) { // Also prevent if click was on a checkbox
+        target.closest('button.expander-button') || target.closest('[role="checkbox"]')) {
       return;
     }
 
     if (displayContext === 'mainPage' && task.slug && onNavigate) {
       onNavigate(task.slug);
     } else if (displayContext === 'detailPage') {
-      const isLeafNode = !task.tasks || task.tasks.length === 0;
-      if (isLeafNode || isStandaloneItem || !ActualIcon) { // Toggle if leaf, standalone, or if it has the interactive checkbox icon
-        onToggleCompletion(task.id, !isCompleted);
-      } else if (task.tasks && task.tasks.length > 0) {
-        setIsExpanded(!isExpanded);
-      }
+       // For detail page items (sub-tasks or standalone main task), card click toggles completion.
+       // Checkbox click is handled separately with stopPropagation.
+      onToggleCompletion(task.id, !isCompleted);
     }
   };
   
@@ -173,15 +172,15 @@ export function RecursiveChecklistItem({
     displayContext === 'detailPage' ? 
       (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') : 
       'bg-card',
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '',
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `pl-${level * 2} sm:pl-${level * 4}` : ''
+     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '', // No extra left margin for sub-tasks
+     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `pl-${level * 2} sm:pl-${level * 4}` : '' // Keep padding for indentation
   );
   
   const showContentArea = displayContext === 'detailPage' && (isExpanded || isStandaloneItem) && (hasOwnContent || (hasSubTasks && !isStandaloneItem));
 
-  const checkboxSizeClass = displayContext === 'mainPage' || (displayContext === 'detailPage' && isStandaloneItem && !ActualIcon)
-    ? 'h-6 w-6 sm:h-7 sm:w-7' // Size for main page items or standalone items using checkbox as icon
-    : 'h-5 w-5 sm:h-6 sm:w-6'; // Size for sub-items on detail page using checkbox as icon
+  const checkboxSizeClass = (displayContext === 'mainPage' || (displayContext === 'detailPage' && isStandaloneItem))
+    ? 'h-6 w-6 sm:h-7 sm:w-7' // Size for main page items or standalone items (which use this checkbox as their icon)
+    : 'h-5 w-5 sm:h-6 sm:w-6'; // Size for sub-items on detail page using this checkbox as their icon
 
   return (
     <Card
@@ -193,7 +192,8 @@ export function RecursiveChecklistItem({
           "flex flex-row items-center space-x-3 p-4 sm:p-6",
           displayContext === 'detailPage' ? 
             (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'pb-3 pt-3') : 
-            ''
+            '',
+          displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
         {ActualIcon ? (
           <ActualIcon
@@ -205,8 +205,8 @@ export function RecursiveChecklistItem({
             aria-hidden="true"
           />
         ) : (
-           <Checkbox // Interactive checkbox in icon slot if no ActualIcon
-            id={`task-icon-checkbox-${task.id}`}
+           <Checkbox 
+            id={`task-checkbox-${task.id}`}
             checked={isCompleted}
             onCheckedChange={(checked) => {
                 onToggleCompletion(task.id, typeof checked === 'boolean' ? checked : false);
@@ -216,7 +216,7 @@ export function RecursiveChecklistItem({
                 `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
                 checkboxSizeClass
             )}
-            onClick={(e) => e.stopPropagation()} // Important to prevent card click handler
+            onClick={(e) => e.stopPropagation()} 
           />
         )}
         <div className="flex-grow">
@@ -242,7 +242,6 @@ export function RecursiveChecklistItem({
             {isExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
           </button>
         )}
-        {/* Removed the separate header checkbox logic here */}
       </CardHeader>
 
       {displayContext === 'mainPage' && mainPageDescription && !isCompleted && (
@@ -257,15 +256,16 @@ export function RecursiveChecklistItem({
         <CardContent 
             id={`task-content-${task.id}`}
             className={cn(
-                "pt-0",
+                "pt-0", // Default pt-0, specific padding logic below
                 (displayContext === 'detailPage' && (level > 0 || isStandaloneItem))
                     ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4" 
-                    : "p-4 sm:p-6",
-                (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem))
-                    ? "pt-3" 
-                    : (hasOwnContent && displayContext === 'detailPage'
-                        ? (level === 0 && !isStandaloneItem ? 'pt-0' : 'pt-3') 
-                        : 'pt-0') 
+                    : "p-4 sm:p-6", // Default padding for main page or top-level detail page
+                (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent)
+                    ? "pt-0" // No top padding if it's a direct child on detail page with its own content
+                    : ( (displayContext === 'detailPage' && (level > 0 || isStandaloneItem)) ? "pt-3" : ""), // pt-3 for nested/standalone if it has subtasks or own content
+                (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage')
+                    ? "pt-3" // if only subtasks and nested/standalone
+                    : ""
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
@@ -281,7 +281,7 @@ export function RecursiveChecklistItem({
               {task.videos.map((videoUrl, index) => {
                 const embedUrl = getYouTubeEmbedUrl(videoUrl);
                 return embedUrl ? (
-                  <div key={`video-${index}`} className="aspect-video w-full max-w-md mx-auto">
+                  <div key={`video-${index}`} className="aspect-video w-full">
                     <iframe
                       width="100%"
                       height="100%"
@@ -366,4 +366,3 @@ export function RecursiveChecklistItem({
   );
 }
 
-  
