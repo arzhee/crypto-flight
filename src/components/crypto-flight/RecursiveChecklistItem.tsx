@@ -180,18 +180,18 @@ export function RecursiveChecklistItem({
   const checkboxSizeClass = 'h-5 w-5 sm:h-6 sm:w-6';
   const iconSizeClass = displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7';
   
-  const isHeaderItemsStart = (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || (hasSubTasks && !ActualIcon && !hasSubTasks)));
+  const isHeaderItemsStart = displayContext === 'detailPage' && !isStandaloneItem;
 
 
   const cardTitleClass = cn(
     'font-headline',
-    (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || (hasSubTasks && !isStandaloneItem) || (!hasSubTasks && !isStandaloneItem)))
+     (displayContext === 'detailPage' && (isHeaderItemsStart || level > 0 || isStandaloneItem || !ActualIcon))
       ? 'font-normal text-base sm:text-lg'
       : 'font-semibold text-lg sm:text-xl'
   );
   
   const headerPaddingClass = displayContext === 'detailPage' ? 
-    (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'p-4 sm:p-6 pb-3 pt-3') : 
+    ( (level > 0 || isStandaloneItem) ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'p-4 sm:p-6 pb-3 pt-3') : 
     'p-4 sm:p-6';
 
   const cardContentPaddingClass = displayContext === 'detailPage' ?
