@@ -1,3 +1,3 @@
 
-export const LOCAL_STORAGE_KEY_MAIN_TASKS = 'cryptoFlightCompletedItems';
-export const LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX = 'cryptoFlightCompletedSubTasks_';
+export const LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED = 'cryptoFlightTopLevelTasksCompleted';
+export const LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE = 'cryptoFlightAllTaskItemsCompletionState';

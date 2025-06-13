@@ -3,139 +3,48 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import type { ChecklistItem as ChecklistItemType, TaskStep } from '@/types';
-import { initialChecklistItems as allAppChecklistItems } from '@/constants/checklistData';
-import { LOCAL_STORAGE_KEY_MAIN_TASKS, LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX } from '@/constants/storageKeys';
+import type { ChecklistItem as ChecklistItemType } from '@/types';
+import { initialChecklistItems } from '@/constants/checklistData';
+import { LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE } from '@/constants/storageKeys';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, ChevronLeft, ChevronRight } from 'lucide-react';
-import NextImage from 'next/image';
 import { AppHeader } from '@/components/crypto-flight/AppHeader';
 import { CryptoFlightProgressBar } from '@/components/crypto-flight/ProgressBar';
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { AppFooter } from '@/components/layout';
+import { RecursiveChecklistItem } from '@/components/crypto-flight/RecursiveChecklistItem';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const getYouTubeEmbedUrl = (url: string): string | null => {
-  if (!url || typeof url !== 'string') return null;
-  let videoId = null;
-  try {
-    const urlObj = new URL(url);
-    if (urlObj.hostname === 'youtu.be') {
-      videoId = urlObj.pathname.slice(1);
-    } else if (urlObj.hostname.includes('youtube.com') && urlObj.pathname === '/watch') {
-      videoId = urlObj.searchParams.get('v');
-    } else if (urlObj.hostname.includes('youtube.com') && urlObj.pathname.startsWith('/embed/')) {
-      videoId = urlObj.pathname.split('/embed/')[1];
-    }
-  } catch (e) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    if (match && match[2] && match[2].length === 11) {
-      videoId = match[2];
+const getAllTaskIdsRecursive = (tasks: ChecklistItemType[]): string[] => {
+  let ids: string[] = [];
+  for (const task of tasks) {
+    ids.push(task.id);
+    if (task.tasks && task.tasks.length > 0) {
+      ids = ids.concat(getAllTaskIdsRecursive(task.tasks));
     }
   }
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+  return ids;
 };
-
-interface StepCompletionState {
-  [stepId: string]: boolean;
-}
-
-const formatStepText = (text: string): string => {
-  if (!text) return '';
-  return text
-    .replace(/\[(\d+)\]/g, '<sup>$1</sup>')
-    .replace(/'([^']*)'/g, '<strong>$1</strong>');
-};
-
-const formatCitation = (text: string): string => {
-  if (!text) return '';
-  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)(.*)/;
-  const match = text.match(markdownLinkRegex);
-  if (match) {
-    const linkText = match[1];
-    const url = match[2];
-    const suffix = match[3] || '';
-    const escapeHtml = (unsafe: string) => 
-      unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${escapeHtml(linkText)}</a>${escapeHtml(suffix)}`;
-  }
-  return text; 
-};
-
-interface TaskStepImageProps {
-  imageUrl: string;
-  altText: string;
-  onImageClick: (imageUrlFromStepImage: string, event: React.MouseEvent) => void;
-  priority: boolean;
-  aiHint: string;
-}
-
-const TaskStepImage: React.FC<TaskStepImageProps> = ({ imageUrl, altText, onImageClick, priority, aiHint }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  return (
-    <div
-      className="relative w-full max-w-[300px] aspect-[3/2] rounded-md overflow-hidden shadow-md cursor-pointer bg-muted/30"
-      onClick={(e) => onImageClick(imageUrl, e)}
-      data-image-zoomable="true"
-    >
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-muted/30 z-10">
-          <svg className="animate-spin h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-        </div>
-      )}
-      <NextImage
-        src={imageUrl}
-        alt={altText}
-        fill
-        style={{ objectFit: 'cover' }}
-        className={`rounded-md transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-        sizes="(max-width: 640px) 100vw, 300px"
-        priority={priority}
-        data-ai-hint={aiHint}
-        onLoadingComplete={() => setIsLoading(false)}
-        onError={() => setIsLoading(false)} 
-        draggable="false"
-      />
-    </div>
-  );
-};
-
 
 export default function TaskDetailPage() {
   const router = useRouter();
   const params = useParams();
   const taskSlug = typeof params.slug === 'string' ? params.slug : undefined;
 
-  const [task, setTask] = useState<ChecklistItemType | null>(null);
-  const [stepCompletions, setStepCompletions] = useState<StepCompletionState>({});
-  const [allStepsMarked, setAllStepsMarked] = useState(false);
+  const [mainTask, setMainTask] = useState<ChecklistItemType | null>(null);
+  const [taskCompletionStates, setTaskCompletionStates] = useState<Record<string, boolean>>({});
   const [isMounted, setIsMounted] = useState(false);
-  const [completedTaskCount, setCompletedTaskCount] = useState(0);
-  const [totalTaskCount, setTotalTaskCount] = useState(0);
-
+  const [completedTopLevelTaskCount, setCompletedTopLevelTaskCount] = useState(0);
+  const [totalTopLevelTaskCount, setTotalTopLevelTaskCount] = useState(0);
+  
   const [zoomedImageUrl, setZoomedImageUrl] = useState<string | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [currentStepImages, setCurrentStepImages] = useState<string[]>([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [currentModalImages, setCurrentModalImages] = useState<string[]>([]);
+  const [currentImageIndexInModal, setCurrentImageIndexInModal] = useState<number>(0);
   const [imageAnimationClass, setImageAnimationClass] = useState('');
   const [isImageAnimating, setIsImageAnimating] = useState(false);
-  const animationDuration = 300; 
-
+  const animationDuration = 300;
   const touchStartXRef = useRef(0);
-
 
   useEffect(() => {
     setIsMounted(true);
@@ -143,111 +52,158 @@ export default function TaskDetailPage() {
 
   useEffect(() => {
     if (isMounted && taskSlug) {
-      const foundTask = allAppChecklistItems.find(item => item.slug === taskSlug);
+      const foundTask = initialChecklistItems.find(item => item.slug === taskSlug);
       if (foundTask) {
-        setTask(foundTask);
+        setMainTask(foundTask);
         try {
-          const storedStepCompletionsJSON = localStorage.getItem(`${LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX}${foundTask.id}`);
-          let initialCompletions: StepCompletionState = {};
+          const storedAllItemsJSON = localStorage.getItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE);
+          let initialCompletions = storedAllItemsJSON ? JSON.parse(storedAllItemsJSON) as Record<string, boolean> : {};
 
-          if (storedStepCompletionsJSON) {
-            initialCompletions = JSON.parse(storedStepCompletionsJSON) as StepCompletionState;
-            (foundTask.steps || []).forEach(step => {
-                if (!(step.id in initialCompletions) || typeof initialCompletions[step.id] !== 'boolean') {
-                    initialCompletions[step.id] = step.completed;
-                }
-            });
-          } else {
-            (foundTask.steps || []).forEach(step => {
-              initialCompletions[step.id] = step.completed;
-            });
-          }
-          setStepCompletions(initialCompletions);
+          const seedCompletionStatesRecursive = (task: ChecklistItemType) => {
+            if (!(task.id in initialCompletions)) {
+              initialCompletions[task.id] = task.completed === true;
+            }
+            if (task.tasks && task.tasks.length > 0) {
+              task.tasks.forEach(subTask => seedCompletionStatesRecursive(subTask));
+            }
+          };
+          seedCompletionStatesRecursive(foundTask);
+          setTaskCompletionStates(initialCompletions);
+          localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(initialCompletions));
+
         } catch (error) {
-          console.error("Failed to load step completions from local storage:", error);
-          const initialCompletionsOnError: StepCompletionState = {};
-          (foundTask.steps || []).forEach(step => {
-            initialCompletionsOnError[step.id] = step.completed;
-          });
-          setStepCompletions(initialCompletionsOnError);
+          console.error("Failed to load or seed task completion states from local storage:", error);
+          const fallbackCompletions: Record<string, boolean> = {};
+          const initializeFallbackRecursive = (task: ChecklistItemType) => {
+            fallbackCompletions[task.id] = task.completed === true;
+            if (task.tasks) {
+              task.tasks.forEach(sub => initializeFallbackRecursive(sub));
+            }
+          };
+          initializeFallbackRecursive(foundTask);
+          setTaskCompletionStates(fallbackCompletions);
         }
       } else {
-        router.push('/'); 
+        router.push('/');
       }
 
       try {
-        const storedCompletedIdsJSON = localStorage.getItem(LOCAL_STORAGE_KEY_MAIN_TASKS);
-        const completedIds = storedCompletedIdsJSON ? JSON.parse(storedCompletedIdsJSON) as string[] : [];
-        setCompletedTaskCount(completedIds.length);
-        setTotalTaskCount(allAppChecklistItems.length);
+        const storedTopLevelJSON = localStorage.getItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED);
+        const completedIds = storedTopLevelJSON ? JSON.parse(storedTopLevelJSON) as string[] : [];
+        setCompletedTopLevelTaskCount(completedIds.length);
+        setTotalTopLevelTaskCount(initialChecklistItems.length);
       } catch (error) {
         console.error("Failed to load main task progress from local storage:", error);
-        setTotalTaskCount(allAppChecklistItems.length); 
+        setTotalTopLevelTaskCount(initialChecklistItems.length);
       }
     }
   }, [taskSlug, router, isMounted]);
 
-
   useEffect(() => {
-    if (isMounted && task && task.steps && task.steps.length > 0) {
-      const allMarked = task.steps.every(step => stepCompletions[step.id]);
-      setAllStepsMarked(allMarked);
-      if (Object.keys(stepCompletions).length > 0) {
-        try {
-          localStorage.setItem(`${LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX}${task.id}`, JSON.stringify(stepCompletions));
-        } catch (error) {
-          console.error("Failed to save step completions to local storage:", error);
-        }
+    if (isMounted && Object.keys(taskCompletionStates).length > 0) {
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(taskCompletionStates));
+      } catch (error) {
+        console.error("Failed to save task completion states to local storage:", error);
       }
-    } else if (task && (!task.steps || task.steps.length === 0)) {
-      setAllStepsMarked(true); 
-    } else {
-      setAllStepsMarked(false);
     }
-  }, [stepCompletions, task, isMounted]);
+  }, [taskCompletionStates, isMounted]);
 
-  const handleToggleStep = useCallback((stepId: string) => {
-    setStepCompletions(prev => {
-      const newCompletions = {
-        ...prev,
-        [stepId]: !prev[stepId],
+  const findTaskByIdRecursive = (tasks: ChecklistItemType[], id: string): ChecklistItemType | null => {
+    for (const task of tasks) {
+      if (task.id === id) return task;
+      if (task.tasks) {
+        const found = findTaskByIdRecursive(task.tasks, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+  
+  const findParentIdRecursive = (tasks: ChecklistItemType[], childId: string, parentId: string | null = null): string | null => {
+    for (const task of tasks) {
+        if (task.id === childId) return parentId;
+        if (task.tasks) {
+            const foundParentId = findParentIdRecursive(task.tasks, childId, task.id);
+            if (foundParentId) return foundParentId;
+        }
+    }
+    return null;
+  };
+
+  const handleToggleTaskCompletion = useCallback((taskId: string, isChecked: boolean) => {
+    setTaskCompletionStates(prevStates => {
+      const newStates = { ...prevStates };
+      
+      const updateChildrenRecursive = (currentTaskId: string, checkedStatus: boolean) => {
+        newStates[currentTaskId] = checkedStatus;
+        const currentTask = findTaskByIdRecursive(initialChecklistItems, currentTaskId);
+        if (currentTask && currentTask.tasks) {
+          currentTask.tasks.forEach(child => updateChildrenRecursive(child.id, checkedStatus));
+        }
       };
-      return newCompletions;
+      
+      updateChildrenRecursive(taskId, isChecked);
+
+      const updateParentRecursive = (currentTaskId: string) => {
+        const parentId = findParentIdRecursive(initialChecklistItems, currentTaskId);
+        if (parentId) {
+            const parentTask = findTaskByIdRecursive(initialChecklistItems, parentId);
+            if (parentTask && parentTask.tasks) {
+                const allSiblingsCompleted = parentTask.tasks.every(sibling => newStates[sibling.id]);
+                if(newStates[parentId] !== allSiblingsCompleted) {
+                    newStates[parentId] = allSiblingsCompleted;
+                    updateParentRecursive(parentId); 
+                }
+            }
+        }
+      };
+      updateParentRecursive(taskId);
+      
+      return newStates;
     });
   }, []);
 
-  const onStepDivClick = (e: React.MouseEvent<HTMLDivElement>, stepId: string) => {
-    const target = e.target as HTMLElement;
-    if (target.closest(`#step-${stepId}`) || target.closest(`label[for='step-${stepId}']`)) {
-      return; 
-    }
-    if (target.closest('[data-image-zoomable="true"]')) {
-        return;
-    }
-    handleToggleStep(stepId);
-  };
 
-  const handleImageClick = (clickedImageUrl: string, stepId: string, imageIndexInStepArray: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    const currentTaskStep = task?.steps?.find(s => s.id === stepId);
-    const imagesForStep = currentTaskStep?.images || [];
-    
-    setCurrentStepImages(imagesForStep);
-    setCurrentImageIndex(imageIndexInStepArray);
-    setZoomedImageUrl(clickedImageUrl);
-    setImageAnimationClass(''); 
-    setIsImageModalOpen(true);
+  const handleCompleteMainTaskAndGoHome = () => {
+    if (mainTask && isMounted) {
+      try {
+        const updatedAllStates = { ...taskCompletionStates };
+        const allIdsInTree = getAllTaskIdsRecursive([mainTask]);
+        allIdsInTree.forEach(id => updatedAllStates[id] = true);
+        localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(updatedAllStates));
+        setTaskCompletionStates(updatedAllStates);
+
+        const storedTopLevelJSON = localStorage.getItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED);
+        let topLevelCompletedSet = new Set(storedTopLevelJSON ? JSON.parse(storedTopLevelJSON) as string[] : []);
+        topLevelCompletedSet.add(mainTask.id);
+        localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(topLevelCompletedSet)));
+        
+        setCompletedTopLevelTaskCount(topLevelCompletedSet.size);
+
+        router.push('/');
+      } catch (error) {
+        console.error("Failed to update task completion for navigation:", error);
+      }
+    }
   };
   
+  const handleImageZoom = useCallback((imageUrl: string, allImagesInStep: string[], startIndex: number) => {
+    setCurrentModalImages(allImagesInStep);
+    setCurrentImageIndexInModal(startIndex);
+    setZoomedImageUrl(imageUrl);
+    setImageAnimationClass('');
+    setIsImageModalOpen(true);
+  }, []);
+
   const handlePrevImage = useCallback(() => {
-    if (!currentStepImages || currentStepImages.length <= 1 || isImageAnimating) return;
+    if (!currentModalImages || currentModalImages.length <= 1 || isImageAnimating) return;
     setIsImageAnimating(true);
     setImageAnimationClass('animate-slide-out-right');
-
     setTimeout(() => {
-      setCurrentImageIndex((prevIndex) => {
-        const newIndex = (prevIndex - 1 + currentStepImages.length) % currentStepImages.length;
-        setZoomedImageUrl(currentStepImages[newIndex]);
+      setCurrentImageIndexInModal((prevIndex) => {
+        const newIndex = (prevIndex - 1 + currentModalImages.length) % currentModalImages.length;
+        setZoomedImageUrl(currentModalImages[newIndex]);
         setImageAnimationClass('animate-slide-in-from-left');
         return newIndex;
       });
@@ -256,17 +212,16 @@ export default function TaskDetailPage() {
         setIsImageAnimating(false);
       }, animationDuration);
     }, animationDuration);
-  }, [currentStepImages, isImageAnimating, animationDuration]);
-  
+  }, [currentModalImages, isImageAnimating, animationDuration]);
+
   const handleNextImage = useCallback(() => {
-    if (!currentStepImages || currentStepImages.length <= 1 || isImageAnimating) return;
+    if (!currentModalImages || currentModalImages.length <= 1 || isImageAnimating) return;
     setIsImageAnimating(true);
     setImageAnimationClass('animate-slide-out-left');
-
     setTimeout(() => {
-      setCurrentImageIndex((prevIndex) => {
-        const newIndex = (prevIndex + 1) % currentStepImages.length;
-        setZoomedImageUrl(currentStepImages[newIndex]);
+      setCurrentImageIndexInModal((prevIndex) => {
+        const newIndex = (prevIndex + 1) % currentModalImages.length;
+        setZoomedImageUrl(currentModalImages[newIndex]);
         setImageAnimationClass('animate-slide-in-from-right');
         return newIndex;
       });
@@ -275,49 +230,30 @@ export default function TaskDetailPage() {
         setIsImageAnimating(false);
       }, animationDuration);
     }, animationDuration);
-  }, [currentStepImages, isImageAnimating, animationDuration]);
-
+  }, [currentModalImages, isImageAnimating, animationDuration]);
+  
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (isImageAnimating || (currentStepImages && currentStepImages.length <= 1)) return;
+    if (isImageAnimating || (currentModalImages && currentModalImages.length <= 1)) return;
     touchStartXRef.current = e.targetTouches[0].clientX;
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartXRef.current === 0 || isImageAnimating || (currentStepImages && currentStepImages.length <= 1)) {
+    if (touchStartXRef.current === 0 || isImageAnimating || (currentModalImages && currentModalImages.length <= 1)) {
       return;
     }
     const touchEndX = e.changedTouches[0].clientX;
     const deltaX = touchStartXRef.current - touchEndX;
-    const swipeThreshold = 50; // Minimum distance for a swipe
+    const swipeThreshold = 50; 
 
     if (deltaX > swipeThreshold) {
       handleNextImage();
     } else if (deltaX < -swipeThreshold) {
       handlePrevImage();
     }
-    touchStartXRef.current = 0; // Reset for next swipe
+    touchStartXRef.current = 0; 
   };
 
-
-  const handleCompleteMainTask = () => {
-    if (task && isMounted) {
-      try {
-        const storedCompletedIdsJSON = localStorage.getItem(LOCAL_STORAGE_KEY_MAIN_TASKS);
-        let completedIdsSet = new Set(storedCompletedIdsJSON ? JSON.parse(storedCompletedIdsJSON) as string[] : []);
-        
-        if (!completedIdsSet.has(task.id)) { 
-          completedIdsSet.add(task.id);
-          localStorage.setItem(LOCAL_STORAGE_KEY_MAIN_TASKS, JSON.stringify(Array.from(completedIdsSet)));
-          setCompletedTaskCount(completedIdsSet.size); 
-        }
-        router.push('/');
-      } catch (error) {
-        console.error("Failed to update task completion in local storage:", error);
-      }
-    }
-  };
-
-  if (!isMounted || !task) {
+  if (!isMounted || !mainTask) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
         <p className="text-foreground">Loading task details...</p>
@@ -325,140 +261,77 @@ export default function TaskDetailPage() {
     );
   }
 
-  const { Icon } = task;
-  const isMainTaskCompleted = isMounted && (localStorage.getItem(LOCAL_STORAGE_KEY_MAIN_TASKS) || '').includes(task.id);
+  const MainIcon = mainTask.icon;
+  const isThisMainTaskMarkedCompleteInTopLevelStorage = isMounted && (localStorage.getItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED) || '').includes(mainTask.id);
+
+  const areAllDisplayableTasksCompleted = () => {
+    if (!mainTask) return false;
+    if (mainTask.tasks && mainTask.tasks.length > 0) {
+      return mainTask.tasks.every(subTask => !!taskCompletionStates[subTask.id]);
+    }
+    // If no sub-tasks, the main task itself must be completed
+    return !!taskCompletionStates[mainTask.id];
+  };
+  const allVisibleTasksCompleted = areAllDisplayableTasksCompleted();
+
+
+  const hasDetailedContent = (task: ChecklistItemType) => {
+    return (task.videos && task.videos.length > 0) ||
+           (task.images && task.images.length > 0) ||
+           (task.notes && task.notes.length > 0) ||
+           (task.cites && task.cites.length > 0) ||
+           (task.texts && task.texts.length > (task.name ? 0 : 1)); // if no name, texts[0] is title
+  };
+
 
   return (
     <main className="min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="w-full max-w-2xl">
         <AppHeader />
-        <CryptoFlightProgressBar currentStep={completedTaskCount} totalSteps={totalTaskCount} />
-        
+        <CryptoFlightProgressBar currentStep={completedTopLevelTaskCount} totalSteps={totalTopLevelTaskCount} />
+
         <Card className="shadow-xl w-full mt-6 flex flex-col max-h-[calc(100vh-14rem)] sm:max-h-[calc(100vh-12rem)]">
           <CardHeader className="flex flex-row items-start space-x-4 p-4 sm:p-6">
-            {Icon && <Icon className={`h-10 w-10 ${isMainTaskCompleted ? 'text-success' : 'text-primary'} mt-1 shrink-0`} aria-hidden="true" />}
+            {MainIcon && <MainIcon className={`h-10 w-10 ${isThisMainTaskMarkedCompleteInTopLevelStorage ? 'text-success' : 'text-primary'} mt-1 shrink-0`} aria-hidden="true" />}
             <div className="flex-grow">
-              <CardTitle className="font-headline text-xl sm:text-2xl">{task.name}</CardTitle>
+              <CardTitle className="font-headline text-xl sm:text-2xl">{mainTask.name}</CardTitle>
+              {mainTask.texts && mainTask.texts.length > 0 && (
+                <CardDescription className="text-sm sm:text-base mt-1">
+                  {mainTask.texts[0]}
+                </CardDescription>
+              )}
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-3 sm:px-6 sm:pb-4 flex-grow overflow-y-auto">
-            {task.text && (
-              <CardDescription className="text-sm sm:text-base mt-1 mb-4">
-                {task.text}
-              </CardDescription>
-            )}
-            {(task.steps && task.steps.length > 0) ? (
-              <>
-                <div className="space-y-4">
-                  {task.steps.map((step) => {
-                    const primaryStepText = step.texts && step.texts.length > 0 ? step.texts[0] : '';
-                    const ariaLabelText = primaryStepText || 'Step instruction';
-
-                    return (
-                      <div 
-                        key={step.id} 
-                        className="flex flex-col p-3 bg-muted/50 dark:bg-muted/30 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                        onClick={(e) => onStepDivClick(e, step.id)}
-                      >
-                        <div className="flex items-start space-x-3">
-                          <Checkbox
-                            id={`step-${step.id}`}
-                            checked={!!stepCompletions[step.id]}
-                            onCheckedChange={() => handleToggleStep(step.id)}
-                            className="mt-1 h-5 w-5 border-primary data-[state=checked]:bg-primary focus:ring-primary"
-                            aria-label={ariaLabelText}
-                          />
-                          <label 
-                            htmlFor={`step-${step.id}`} 
-                            className="flex-grow text-sm text-foreground leading-relaxed"
-                            dangerouslySetInnerHTML={{ __html: formatStepText(primaryStepText) }}
-                          />
-                        </div>
-                        
-                        <div className="pl-8">
-                          {step.texts && step.texts.length > 1 && (
-                            <div className="mt-2 space-y-1 text-sm text-foreground">
-                              {step.texts.slice(1).map((additionalText, index) => (
-                                <p key={`${step.id}-additional-${index}`} dangerouslySetInnerHTML={{ __html: formatStepText(additionalText) }} />
-                              ))}
-                            </div>
-                          )}
-                          
-                          {step.videos && step.videos.length > 0 && (
-                            <div className="mt-3 space-y-3">
-                              {step.videos.map((videoUrl, index) => {
-                                const embedUrl = getYouTubeEmbedUrl(videoUrl);
-                                return embedUrl ? (
-                                  <div key={`${step.id}-video-${index}`} className="aspect-video w-full">
-                                    <iframe
-                                      width="100%"
-                                      height="100%"
-                                      src={embedUrl}
-                                      title="YouTube video player"
-                                      frameBorder="0"
-                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                      allowFullScreen
-                                      className="rounded-md shadow-md"
-                                    ></iframe>
-                                  </div>
-                                ) : null;
-                              })}
-                            </div>
-                          )}
-
-                          {step.images && step.images.length > 0 && (
-                            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
-                              {step.images.map((imageUrl, index) => {
-                                let aiHintForImage = imageUrl.startsWith('https://placehold.co') ? "placeholder image" : "task illustration";
-                                return (
-                                  <TaskStepImage
-                                    key={`${step.id}-image-${index}`}
-                                    imageUrl={imageUrl}
-                                    altText={`Step image ${index + 1}`}
-                                    onImageClick={(imgUrl, e) => handleImageClick(imgUrl, step.id, index, e)}
-                                    priority={index < 2}
-                                    aiHint={aiHintForImage}
-                                  />
-                                );
-                              })}
-                            </div>
-                          )}
-
-                          {step.notes && step.notes.length > 0 && (
-                            <div className="mt-3 space-y-2">
-                              {step.notes.map((note, noteIndex) => (
-                                 <Alert key={`${step.id}-note-${noteIndex}`} className="border-primary/50 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground/90 text-xs">
-                                  <Info className="h-4 w-4 text-primary dark:text-primary-foreground/90" />
-                                  <AlertDescription className="leading-relaxed">
-                                    {note.toUpperCase().startsWith("NOTE:") ? note.substring(5).trim() : note}
-                                  </AlertDescription>
-                                </Alert>
-                              ))}
-                            </div>
-                          )}
-
-                          {step.cites && step.cites.length > 0 && (
-                            <div className="mt-4 pt-3 border-t border-muted/30">
-                              <ul className="list-none pl-0 space-y-1">
-                                {step.cites.map((cite, citeIndex) => (
-                                  <li 
-                                    key={`${step.id}-cite-${citeIndex}`} 
-                                    className="text-xs text-muted-foreground leading-relaxed"
-                                  >
-                                    {citeIndex + 1}. <span dangerouslySetInnerHTML={{ __html: formatCitation(cite) }} />
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
+            {(mainTask.tasks && mainTask.tasks.length > 0) ? (
+              <div className="space-y-4">
+                {mainTask.tasks.map((subTask) => (
+                  <RecursiveChecklistItem
+                    key={subTask.id}
+                    task={subTask}
+                    isCompleted={!!taskCompletionStates[subTask.id]}
+                    onToggleCompletion={handleToggleTaskCompletion}
+                    onImageZoom={handleImageZoom}
+                    taskCompletionStates={taskCompletionStates}
+                    level={0} 
+                    displayContext="detailPage"
+                  />
+                ))}
+              </div>
+            ) : hasDetailedContent(mainTask) ? (
+                 <RecursiveChecklistItem
+                    key={mainTask.id}
+                    task={mainTask}
+                    isCompleted={!!taskCompletionStates[mainTask.id]}
+                    onToggleCompletion={handleToggleTaskCompletion}
+                    onImageZoom={handleImageZoom}
+                    taskCompletionStates={taskCompletionStates}
+                    level={0}
+                    displayContext="detailPage"
+                    isStandaloneItem={true} 
+                 />
             ) : (
-              <p className="text-sm text-muted-foreground">This task has no specific steps to check off here. You can mark it complete using the button below.</p>
+              <p className="text-sm text-muted-foreground">{mainTask.texts && mainTask.texts.length > 1 ? mainTask.texts.slice(1).join(' ') : "This task has no specific steps. Mark complete below."}</p>
             )}
           </CardContent>
           <CardFooter className="flex justify-end space-x-3 px-4 py-4 sm:px-6 sm:pb-5 border-t">
@@ -466,11 +339,11 @@ export default function TaskDetailPage() {
               Go back
             </Button>
             <Button
-              onClick={handleCompleteMainTask}
-              disabled={!allStepsMarked}
+              onClick={handleCompleteMainTaskAndGoHome}
+              disabled={!allVisibleTasksCompleted}
               className="bg-accent text-accent-foreground hover:bg-accent/90 focus-visible:ring-accent disabled:opacity-60"
             >
-              Complete task
+              Complete: {mainTask.name}
             </Button>
           </CardFooter>
         </Card>
@@ -478,13 +351,13 @@ export default function TaskDetailPage() {
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
         <DialogContent className="max-w-3xl w-[90vw] max-h-[90vh] p-2 sm:p-4 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm">
           <DialogTitle className="sr-only">Zoomed Task Image</DialogTitle>
-          {zoomedImageUrl && currentStepImages && currentStepImages.length > 0 && (
+          {zoomedImageUrl && currentModalImages && currentModalImages.length > 0 && (
             <div 
               className="relative w-full h-full flex items-center justify-center overflow-hidden"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
-              {currentStepImages.length > 1 && (
+              {currentModalImages.length > 1 && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -496,13 +369,13 @@ export default function TaskDetailPage() {
                   <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
                 </Button>
               )}
-              <img 
+               <img 
                   src={zoomedImageUrl} 
-                  alt={`Zoomed task image ${currentImageIndex + 1} of ${currentStepImages.length}`}
+                  alt={`Zoomed task image ${currentImageIndexInModal + 1} of ${currentModalImages.length}`}
                   className={`max-w-full max-h-[80vh] object-contain rounded-md shadow-lg ${imageAnimationClass}`}
                   draggable="false" 
               />
-              {currentStepImages.length > 1 && (
+              {currentModalImages.length > 1 && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -516,9 +389,9 @@ export default function TaskDetailPage() {
               )}
             </div>
           )}
-          {currentStepImages && currentStepImages.length > 1 && zoomedImageUrl && (
+           {currentModalImages && currentModalImages.length > 1 && zoomedImageUrl && (
             <div className="absolute bottom-2 sm:bottom-4 text-center text-xs sm:text-sm text-foreground/80 bg-background/70 px-2 py-1 rounded-md">
-              {currentImageIndex + 1} / {currentStepImages.length}
+              {currentImageIndexInModal + 1} / {currentModalImages.length}
             </div>
           )}
         </DialogContent>

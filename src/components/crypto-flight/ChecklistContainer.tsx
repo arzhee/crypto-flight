@@ -3,18 +3,21 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { ChecklistItem as ChecklistItemType } from '@/types';
-import { initialChecklistItems } from '@/constants/checklistData';
-import { LOCAL_STORAGE_KEY_MAIN_TASKS, LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX } from '@/constants/storageKeys';
-import { ChecklistItem } from './ChecklistItem';
+import { initialChecklistItems, getAllTaskIds } from '@/constants/checklistData';
+import { LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE } from '@/constants/storageKeys';
 import { CryptoFlightProgressBar } from './ProgressBar';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import Confetti from 'react-confetti';
+import { RecursiveChecklistItem } from './RecursiveChecklistItem';
+import { useRouter } from 'next/navigation';
 
 const SESSION_STORAGE_COMPLETION_MODAL_SHOWN = 'cryptoFlightCompletionModalShownThisSession';
 
 export function ChecklistContainer() {
-  const [checklistData, setChecklistData] = useState<ChecklistItemType[]>(initialChecklistItems);
-  const [completedMainTasks, setCompletedMainTasks] = useState<Set<string>>(new Set());
+  const router = useRouter();
+  const [checklistData] = useState<ChecklistItemType[]>(initialChecklistItems);
+  const [completedTopLevelTasks, setCompletedTopLevelTasks] = useState<Set<string>>(new Set());
+  const [allTaskItemsCompletion, setAllTaskItemsCompletion] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [windowSize, setWindowSize] = useState<{ width: number | undefined; height: number | undefined }>({ width: undefined, height: undefined });
@@ -22,14 +25,39 @@ export function ChecklistContainer() {
   useEffect(() => {
     setMounted(true);
     try {
-      const storedCompletedIdsJSON = localStorage.getItem(LOCAL_STORAGE_KEY_MAIN_TASKS);
-      if (storedCompletedIdsJSON) {
-        const completedIds = JSON.parse(storedCompletedIdsJSON) as string[];
-        setCompletedMainTasks(new Set(completedIds));
-      }
+      const storedTopLevelJSON = localStorage.getItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED);
+      const initialTopLevelTasks = storedTopLevelJSON ? new Set(JSON.parse(storedTopLevelJSON) as string[]) : new Set<string>();
+      
+      const storedAllItemsJSON = localStorage.getItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE);
+      let initialAllItemsCompletion = storedAllItemsJSON ? JSON.parse(storedAllItemsJSON) as Record<string, boolean> : {};
+
+      const seedCompletionStatesRecursive = (tasks: ChecklistItemType[]) => {
+        tasks.forEach(task => {
+          if (!(task.id in initialAllItemsCompletion)) {
+            initialAllItemsCompletion[task.id] = task.completed === true;
+          }
+          // If a top-level task is statically completed (and not overridden by localStorage), add it to the top-level set.
+          if (checklistData.some(topLevelItem => topLevelItem.id === task.id) && initialAllItemsCompletion[task.id] && !initialTopLevelTasks.has(task.id)) {
+             initialTopLevelTasks.add(task.id);
+          }
+          if (task.tasks && task.tasks.length > 0) {
+            seedCompletionStatesRecursive(task.tasks);
+          }
+        });
+      };
+      
+      seedCompletionStatesRecursive(initialChecklistItems);
+
+      setCompletedTopLevelTasks(initialTopLevelTasks);
+      setAllTaskItemsCompletion(initialAllItemsCompletion);
+      
+      localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(initialTopLevelTasks)));
+      localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(initialAllItemsCompletion));
+
     } catch (error) {
-      console.error("Failed to load main task completion from local storage:", error);
-      setCompletedMainTasks(new Set());
+      console.error("Failed to load or seed task completion states from local storage:", error);
+      setCompletedTopLevelTasks(new Set());
+      setAllTaskItemsCompletion({});
     }
 
     function handleResize() {
@@ -39,74 +67,63 @@ export function ChecklistContainer() {
       });
     }
     window.addEventListener('resize', handleResize);
-    handleResize(); 
+    handleResize();
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [checklistData]); // Added checklistData to dependencies to re-run if it changes (though it's static here)
 
   useEffect(() => {
     if (mounted) {
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY_MAIN_TASKS, JSON.stringify(Array.from(completedMainTasks)));
-        
-        const allTasksNowCompleted = checklistData.length > 0 && checklistData.every(item => completedMainTasks.has(item.id));
-        const congratsTaskIsCompleted = completedMainTasks.has('12'); // Assuming '12' is the ID of the "Congratulations" task
+        localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(completedTopLevelTasks)));
+        localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(allTaskItemsCompletion));
 
-        if (allTasksNowCompleted && congratsTaskIsCompleted) {
-          const modalAlreadyShownThisSession = sessionStorage.getItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
-          if (modalAlreadyShownThisSession !== 'true') {
-            setShowCompletionModal(true);
-            sessionStorage.setItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN, 'true');
-          }
+        const allTopLevelTasksActuallyCompleted = checklistData.length > 0 && checklistData.every(item => completedTopLevelTasks.has(item.id));
+        
+        if (allTopLevelTasksActuallyCompleted) {
+            const modalAlreadyShownThisSession = sessionStorage.getItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
+            if (modalAlreadyShownThisSession !== 'true') {
+                setShowCompletionModal(true);
+                sessionStorage.setItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN, 'true');
+            }
         } else {
-          setShowCompletionModal(false); 
-          sessionStorage.removeItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
+            setShowCompletionModal(false);
+            sessionStorage.removeItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
         }
 
       } catch (error) {
-        console.error("Failed to save main task completions to local storage or manage session storage:", error);
+        console.error("Failed to save task completions to local storage or manage session storage:", error);
       }
     }
-  }, [completedMainTasks, mounted, checklistData]);
+  }, [completedTopLevelTasks, allTaskItemsCompletion, mounted, checklistData]);
 
-
-  const handleToggleMainTaskComplete = useCallback((id: string) => {
-    setCompletedMainTasks(prevCompleted => {
-      const newCompleted = new Set(prevCompleted);
-      const task = checklistData.find(item => item.id === id);
-
-      if (newCompleted.has(id)) { // Task was completed, now being unchecked
-        newCompleted.delete(id);
-        if (task && task.steps && task.steps.length > 0) {
-          const resetStepCompletions: Record<string, boolean> = {};
-          task.steps.forEach(step => {
-            resetStepCompletions[step.id] = false;
-          });
-          try {
-            localStorage.setItem(`${LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX}${id}`, JSON.stringify(resetStepCompletions));
-          } catch (error) {
-            console.error(`Failed to reset sub-task completions for task ${id} in local storage:`, error);
-          }
-        }
-      } else { // Task was not completed, now being checked
-        newCompleted.add(id);
-        if (task && task.steps && task.steps.length > 0) {
-          const completeStepCompletions: Record<string, boolean> = {};
-          task.steps.forEach(step => {
-            completeStepCompletions[step.id] = true;
-          });
-          try {
-            localStorage.setItem(`${LOCAL_STORAGE_KEY_SUB_TASKS_PREFIX}${id}`, JSON.stringify(completeStepCompletions));
-          } catch (error) {
-            console.error(`Failed to set sub-task completions for task ${id} to true in local storage:`, error);
-          }
-        }
+  const handleToggleMainTaskComplete = useCallback((taskId: string, isChecked: boolean) => {
+    setCompletedTopLevelTasks(prev => {
+      const newCompleted = new Set(prev);
+      if (isChecked) {
+        newCompleted.add(taskId);
+      } else {
+        newCompleted.delete(taskId);
       }
-      
       return newCompleted;
     });
-  }, [checklistData]); 
 
-  const completedCount = completedMainTasks.size;
+    setAllTaskItemsCompletion(prevAll => {
+      const newAll = { ...prevAll };
+      const taskToUpdate = checklistData.find(item => item.id === taskId);
+      const idsToUpdate = taskToUpdate ? getAllTaskIds([taskToUpdate]) : [taskId]; // getAllTaskIds expects an array
+      
+      idsToUpdate.forEach(id => {
+        newAll[id] = isChecked;
+      });
+      return newAll;
+    });
+  }, [checklistData]);
+
+  const handleNavigate = useCallback((slug: string) => {
+    router.push(`/${slug}`);
+  }, [router]);
+
+  const completedCount = completedTopLevelTasks.size;
   const totalCount = checklistData.length;
 
   if (!mounted) {
@@ -119,7 +136,7 @@ export function ChecklistContainer() {
           </div>
           <div className="w-full h-3 bg-muted rounded-full" />
         </div>
-        {[...Array(12)].map((_, i) => (
+        {[...Array(initialChecklistItems.length || 11)].map((_, i) => (
           <div key={i} className="mb-4 p-6 bg-card rounded-lg shadow-md animate-pulse">
             <div className="h-6 bg-muted rounded w-3/4 mb-3"></div>
             <div className="h-4 bg-muted rounded w-full mb-2"></div>
@@ -143,14 +160,19 @@ export function ChecklistContainer() {
         />
       )}
       <CryptoFlightProgressBar currentStep={completedCount} totalSteps={totalCount} />
-      
+
       <div>
         {checklistData.map((item) => (
-          <ChecklistItem
+          <RecursiveChecklistItem
             key={item.id}
-            item={item}
-            onToggleComplete={handleToggleMainTaskComplete}
-            isInitiallyCompleted={completedMainTasks.has(item.id)}
+            task={item}
+            isCompleted={completedTopLevelTasks.has(item.id)}
+            onToggleCompletion={handleToggleMainTaskComplete}
+            onImageZoom={() => {}} 
+            taskCompletionStates={allTaskItemsCompletion} 
+            level={0}
+            displayContext="mainPage"
+            onNavigate={handleNavigate}
           />
         ))}
       </div>
