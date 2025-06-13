@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info, ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { CryptoFlightProgressBar } from './ProgressBar'; // Import the progress bar
+import { CryptoFlightProgressBar } from './ProgressBar';
 
 const getYouTubeEmbedUrl = (url: string): string | null => {
   if (!url || typeof url !== 'string') return null;
@@ -171,7 +171,7 @@ export function RecursiveChecklistItem({
   const cardClassName = cn(
     "mb-4 shadow-lg transition-all duration-300 ease-in-out",
     displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '',
-    (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage' && (isStandaloneItem || !hasSubTasks || !ActualIcon)) ? 'cursor-pointer' : '',
+    (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage' && (isStandaloneItem || !hasSubTasks || !ActualIcon )) ? 'cursor-pointer' : '',
     displayContext === 'detailPage' ?
       (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') :
       'bg-card',
@@ -188,10 +188,21 @@ export function RecursiveChecklistItem({
 
   const cardTitleClass = cn(
     'font-headline',
-    (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || hasSubTasks))
+    (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || hasSubTasks || (!hasSubTasks && !isStandaloneItem)))
       ? '!font-normal text-base sm:text-lg'
       : 'font-semibold text-lg sm:text-xl'
   );
+  
+  const headerPaddingClass = displayContext === 'detailPage' ? 
+    (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'p-4 sm:p-6 pb-3 pt-3') : 
+    'p-4 sm:p-6';
+
+  const cardContentPaddingClass = displayContext === 'detailPage' ?
+    (level > 0 || isStandaloneItem ? "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4" 
+      : (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent) ? "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0" 
+      : "p-4 sm:p-6 pt-0")
+    : "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
+
 
   return (
     <Card
@@ -202,9 +213,7 @@ export function RecursiveChecklistItem({
       <CardHeader className={cn(
           "flex flex-row space-x-3",
           isHeaderItemsStart ? 'items-start' : 'items-center',
-          displayContext === 'detailPage' ?
-            (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'p-4 sm:p-6 pb-3 pt-3')
-            : 'p-4 sm:p-6',
+          headerPaddingClass,
           displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
         {ActualIcon ? (
@@ -252,7 +261,7 @@ export function RecursiveChecklistItem({
       {displayContext === 'mainPage' && (
         (mainPageDescription && !isCompleted) || (hasSubTasks)
         ) && (
-        <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0">
+        <CardContent className={cardContentPaddingClass}>
           {mainPageDescription && !isCompleted && (
             <CardDescription className="text-sm sm:text-base leading-relaxed">
               {mainPageDescription}
@@ -268,11 +277,16 @@ export function RecursiveChecklistItem({
                 
                 if (totalSubTaskCount > 0) {
                   return (
-                    <CryptoFlightProgressBar 
-                      currentStep={completedSubTaskCount} 
-                      totalSteps={totalSubTaskCount}
-                      showLabels={false}
-                    />
+                    <>
+                      <div className="mb-1 flex justify-end text-xs text-muted-foreground">
+                        <span>{completedSubTaskCount} of {totalSubTaskCount} sub-tasks</span>
+                      </div>
+                      <CryptoFlightProgressBar 
+                        currentStep={completedSubTaskCount} 
+                        totalSteps={totalSubTaskCount}
+                        showLabels={false}
+                      />
+                    </>
                   );
                 }
                 return null;
@@ -286,11 +300,7 @@ export function RecursiveChecklistItem({
         <CardContent
             id={`task-content-${task.id}`}
             className={cn(
-                (displayContext === 'detailPage' && (level > 0 || isStandaloneItem))
-                    ? "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4" 
-                    : (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent)
-                        ? "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0" 
-                        : "p-4 sm:p-6 pt-0",
+                cardContentPaddingClass,
                 (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage')
                     ? "pt-3" 
                     : ""
@@ -327,7 +337,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.images && task.images.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
               {task.images.map((imageUrl, index) => (
                 <TaskStepImage
                   key={`image-${index}`}
@@ -393,3 +403,4 @@ export function RecursiveChecklistItem({
     </Card>
   );
 }
+
