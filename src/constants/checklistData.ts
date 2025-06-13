@@ -1,7 +1,9 @@
-import type { ChecklistItem } from '@/types';
-import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, User, FileText, PlayCircle, ShoppingBag, PartyPopper } from 'lucide-react';
 
-export const initialChecklistItems: ChecklistItem[] =[
+import type { ChecklistItem } from '@/types';
+import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, User, FileText, PlayCircle, ShoppingBag, PartyPopper, CheckSquare, Square } from 'lucide-react';
+
+// Raw data as provided by the user
+const rawChecklistData: ChecklistItem[] =[
   {
     "id": "1",
     "slug": "getting-started-with-cryptocurrency",
@@ -1571,3 +1573,17 @@ export const initialChecklistItems: ChecklistItem[] =[
     ]
   }
 ];
+
+export const initialChecklistItems = rawChecklistData;
+
+// Helper function to recursively collect all task IDs
+export const getAllTaskIds = (tasks: ChecklistItem[]): string[] => {
+  let ids: string[] = [];
+  for (const task of tasks) {
+    ids.push(task.id);
+    if (task.tasks && task.tasks.length > 0) {
+      ids = ids.concat(getAllTaskIds(task.tasks));
+    }
+  }
+  return ids;
+};
