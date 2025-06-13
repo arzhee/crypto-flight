@@ -170,14 +170,14 @@ export function RecursiveChecklistItem({
   const mainPageClasses = displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '';
   const cursorClasses = (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage' && (!isStandaloneItem || !hasSubTasks) ) ? 'cursor-pointer' : '';
   
-  let detailPageSpecificClasses = 'bg-card';
-  if (displayContext === 'detailPage' && !isStandaloneItem) { // It's a sub-task card on the detail page
+  let detailPageSpecificClasses = '';
+  if (displayContext === 'detailPage' && !isStandaloneItem) { 
     if (isCompleted) {
       detailPageSpecificClasses = 'bg-success/10 dark:bg-success/20';
     } else {
       detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30';
     }
-    if (level > 0) { // Specific styles for *nested* sub-task cards
+    if (level > 0) { 
       detailPageSpecificClasses = cn(detailPageSpecificClasses, 'p-3 rounded-lg shadow-sm hover:shadow-md');
     }
   } else if (displayContext === 'detailPage' && isStandaloneItem) {
@@ -208,6 +208,7 @@ export function RecursiveChecklistItem({
   );
   
   let headerPaddingClass = 'p-4 sm:p-6'; 
+  let headerBgClass = '';
   if (displayContext === 'detailPage') {
     if (level > 0 || isStandaloneItem) { 
       headerPaddingClass = 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4';
@@ -222,7 +223,7 @@ export function RecursiveChecklistItem({
       cardContentPaddingClass = "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4";
     } else if (level === 0 && !isStandaloneItem) { 
        if (hasOwnContent) {
-         cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0"; // Keep pt-0 for direct child own content
+         cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0"; 
        } else if (hasSubTasks) { 
           cardContentPaddingClass = "p-4 sm:p-6 pt-0"; 
        }
@@ -311,7 +312,7 @@ export function RecursiveChecklistItem({
           )}
           
           {hasSubTasks && (
-             <div className="mt-0 pt-2">
+             <div className="">
               {(() => {
                 const subTasks = task.tasks || [];
                 const completedSubTaskCount = subTasks.filter(st => !!taskCompletionStates[st.id]).length;
