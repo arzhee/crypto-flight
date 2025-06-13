@@ -180,12 +180,12 @@ export function RecursiveChecklistItem({
   const checkboxSizeClass = 'h-5 w-5 sm:h-6 sm:w-6';
   const iconSizeClass = displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7';
   
-  const isHeaderItemsStart = displayContext === 'detailPage' && (level > 0 || isStandaloneItem || (hasSubTasks && !ActualIcon));
+  const isHeaderItemsStart = (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || (hasSubTasks && !ActualIcon && !hasSubTasks)));
 
 
   const cardTitleClass = cn(
     'font-headline',
-    (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || hasSubTasks || (!hasSubTasks && !isStandaloneItem)))
+    (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || (hasSubTasks && !isStandaloneItem) || (!hasSubTasks && !isStandaloneItem)))
       ? 'font-normal text-base sm:text-lg'
       : 'font-semibold text-lg sm:text-xl'
   );
@@ -195,10 +195,11 @@ export function RecursiveChecklistItem({
     'p-4 sm:p-6';
 
   const cardContentPaddingClass = displayContext === 'detailPage' ?
-    (level > 0 || isStandaloneItem ? "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4" 
-      : (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent) ? "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0" 
-      : "p-4 sm:p-6 pt-0")
-    : "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
+    ( (level > 0 || isStandaloneItem) ? "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4" :
+      (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent) ? "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0" :
+      "p-4 sm:p-6 pt-0"
+    ) : "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
+
 
   return (
     <Card
@@ -212,7 +213,7 @@ export function RecursiveChecklistItem({
           headerPaddingClass,
           displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
-        <div className={cn("flex-grow flex items-center space-x-3", isHeaderItemsStart ? 'items-start' : 'items-center')}>
+        <div className={cn("flex-grow flex space-x-3", isHeaderItemsStart ? 'items-start' : 'items-center')}>
             {ActualIcon ? (
             <ActualIcon
                 className={cn(
@@ -254,7 +255,7 @@ export function RecursiveChecklistItem({
             {isExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
           </button>
         )}
-        {displayContext === 'mainPage' && hasSubTasks && (
+         {displayContext === 'mainPage' && hasSubTasks && (
             <Checkbox
                 id={`task-main-checkbox-agg-${task.id}`}
                 checked={isCompleted}
@@ -292,7 +293,7 @@ export function RecursiveChecklistItem({
                   return (
                     <>
                       <div className="mb-1 flex justify-end text-xs text-muted-foreground">
-                        <span>{completedSubTaskCount} of {totalSubTaskCount} sub-tasks</span>
+                        <span>{completedSubTaskCount} of {totalSubTaskCount} tasks</span>
                       </div>
                       <CryptoFlightProgressBar 
                         currentStep={completedSubTaskCount} 
@@ -314,7 +315,6 @@ export function RecursiveChecklistItem({
             id={`task-content-${task.id}`}
             className={cn(
                 cardContentPaddingClass,
-                 // Removed: (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage') ? "pt-3" : ""
                 (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : ""
             )}
         >
@@ -415,3 +415,4 @@ export function RecursiveChecklistItem({
     </Card>
   );
 }
+
