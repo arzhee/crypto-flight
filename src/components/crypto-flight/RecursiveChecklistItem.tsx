@@ -136,7 +136,7 @@ export function RecursiveChecklistItem({
     hasSubTasks &&        
     !!onNavigate          
   , [displayContext, isStandaloneItem, task.slug, hasSubTasks, onNavigate]);
-
+  
   const isMainTaskStyle = useMemo(() => 
     displayContext === 'mainPage' || isNavigableSubItemOnDetailPage
   , [displayContext, isNavigableSubItemOnDetailPage]);
@@ -146,7 +146,7 @@ export function RecursiveChecklistItem({
   , [displayContext, isStandaloneItem, isNavigableSubItemOnDetailPage]);
 
   const [isExpandedForSimpleDetailItem, setIsExpandedForSimpleDetailItem] = useState(
-    isSimpleDetailItem && hasSubTasks && task.tasks!.every(st => taskCompletionStates[st.id])
+    isSimpleDetailItem && hasSubTasks && task.tasks!.every(st => !!taskCompletionStates[st.id])
   );
 
   const ActualIcon = task.icon;
@@ -155,28 +155,24 @@ export function RecursiveChecklistItem({
     task.name || (task.texts && task.texts.length > 0 ? task.texts[0] : 'Unnamed Task')
   , [task.name, task.texts]);
 
-  // Description for items that are styled like main tasks (mainPage items or navigable sub-items on detailPage)
-  // This description goes into CardContent.
   const itemDescriptionForContent = useMemo(() => {
-    if (isMainTaskStyle) {
-      if (task.name && task.texts && task.texts.length > 0) { // Name exists, texts[0] is description
+    if (isMainTaskStyle) { // This description is for main-page like items
+      if (task.name && task.texts && task.texts.length > 0) {
         return task.texts[0];
       }
-      if (!task.name && task.texts && task.texts.length > 1) { // No name (texts[0] was title), texts[1] is description
+      if (!task.name && task.texts && task.texts.length > 1) {
         return task.texts[1];
       }
     }
     return null; 
   }, [task.name, task.texts, isMainTaskStyle]);
 
-  // Texts for the body of simple detail items or standalone items (when expanded or if no sub-tasks)
   const bodyContentTexts = useMemo(() => {
+    // For simple detail items or standalone items, determine body texts
     if (isStandaloneItem || (isSimpleDetailItem && (isExpandedForSimpleDetailItem || !hasSubTasks))) {
-      // If it has a name, or if the first text line wasn't used as the title, all texts are body content.
       if (task.name || !(task.texts && task.texts.length > 0 && task.texts[0] === taskTitle)) {
         return task.texts || [];
       }
-      // Otherwise (no name, texts[0] was title), body content starts from texts[1].
       return task.texts && task.texts.length > 1 ? task.texts.slice(1) : [];
     }
     return [];
@@ -190,7 +186,7 @@ export function RecursiveChecklistItem({
       return;
     }
 
-    if (task.slug && onNavigate && (displayContext === 'mainPage' || isNavigableSubItemOnDetailPage)) {
+    if (task.slug && onNavigate && isMainTaskStyle) { // Simplified navigation trigger
       onNavigate(task.slug);
     } else if (isSimpleDetailItem) {
       if (hasSubTasks) {
@@ -201,7 +197,7 @@ export function RecursiveChecklistItem({
     } else if (isStandaloneItem && !hasSubTasks){ 
         onToggleCompletion(task.id, !isCompleted);
     }
-  }, [task.id, task.slug, onNavigate, displayContext, isNavigableSubItemOnDetailPage, isSimpleDetailItem, hasSubTasks, onToggleCompletion, isCompleted, isStandaloneItem]);
+  }, [task.id, task.slug, onNavigate, isMainTaskStyle, isSimpleDetailItem, hasSubTasks, onToggleCompletion, isCompleted, isStandaloneItem]);
 
   const handleLeftCheckboxToggle = useCallback(() => {
     onToggleCompletion(task.id, !isCompleted);
@@ -211,8 +207,9 @@ export function RecursiveChecklistItem({
     onToggleCompletion(task.id, checked);
   }, [task.id, onToggleCompletion]);
 
+
   const cardBaseClasses = "mb-4 transition-all duration-300 ease-in-out shadow-md";
-  const cursorClasses = (task.slug && onNavigate && (isMainTaskStyle)) || isSimpleDetailItem || (isStandaloneItem && !hasSubTasks) ? 'cursor-pointer' : '';
+  const cursorClasses = (task.slug && onNavigate && isMainTaskStyle) || isSimpleDetailItem || (isStandaloneItem && !hasSubTasks) ? 'cursor-pointer' : '';
 
   const cardClassName = useMemo(() => cn(
     cardBaseClasses,
@@ -227,7 +224,7 @@ export function RecursiveChecklistItem({
   const iconSizeClass = isMainTaskStyle ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7';
 
   const subTaskProgressBarForCurrentItem = useMemo(() => {
-    if (hasSubTasks) {
+    if (hasSubTasks) { // Progress bar for *this* task's children
       const subTasks = task.tasks || [];
       const completedSubTaskCount = subTasks.filter(st => !!taskCompletionStates[st.id]).length;
       const totalSubTaskCount = subTasks.length;
@@ -250,13 +247,14 @@ export function RecursiveChecklistItem({
   }, [task.tasks, hasSubTasks, taskCompletionStates]);
 
   if (isMainTaskStyle) {
+    // This rendering path is for main page items AND navigable sub-items on detail pages
     return (
       <Card className={cardClassName.trim()} onClick={handleCardClick} aria-label={taskTitle} >
         <CardHeader className={cn(
-          "flex flex-row items-start space-x-4 p-4 sm:p-6", // Matched space-x-4
+          "flex flex-row items-start space-x-4 p-4 sm:p-6",
           (itemDescriptionForContent || subTaskProgressBarForCurrentItem) ? "pb-3 sm:pb-4" : "" 
         )}>
-          <div className="flex-grow flex items-center space-x-3"> {/* Internal spacing for icon+title */}
+          <div className="flex-grow flex items-center space-x-3">
             {ActualIcon && (
               <ActualIcon
                 className={cn(
@@ -274,7 +272,7 @@ export function RecursiveChecklistItem({
               </CardTitle>
             </div>
           </div>
-          {hasSubTasks && ( 
+          {hasSubTasks && ( // Right-side checkbox for main-style tasks with children
             <Checkbox
               id={`task-main-checkbox-agg-${task.id}`}
               checked={!!isCompleted}
@@ -289,7 +287,7 @@ export function RecursiveChecklistItem({
           )}
         </CardHeader>
 
-        {(itemDescriptionForContent || subTaskProgressBarForCurrentItem) ? (
+        {(itemDescriptionForContent || subTaskProgressBarForCurrentItem) && (
           <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0">
             {itemDescriptionForContent && (
                  <CardDescription className="text-sm sm:text-base leading-relaxed mb-3">
@@ -297,16 +295,17 @@ export function RecursiveChecklistItem({
                 </CardDescription>
             )}
             {subTaskProgressBarForCurrentItem && (
-              <div className={itemDescriptionForContent ? "mt-2" : ""}>
+              <div className={cn("mt-2", itemDescriptionForContent ? "pt-1" : "")}> {/* Ensure spacing for progress bar */}
                 {subTaskProgressBarForCurrentItem}
               </div>
             )}
           </CardContent>
-        ) : null }
+        )}
       </Card>
     );
   }
 
+  // This path is for simple detail items (non-navigable children on detail page) or standalone items
   const showContentAreaForSimpleOrStandalone = useMemo(() =>
     (isSimpleDetailItem && (isExpandedForSimpleDetailItem || !hasSubTasks)) ||
     (isStandaloneItem && (!hasSubTasks || (bodyContentTexts.length > 0 || task.videos?.length || task.images?.length || task.notes?.length || task.cites?.length)))
@@ -332,7 +331,7 @@ export function RecursiveChecklistItem({
                     )}
                     aria-hidden="true"
                 />
-            ) : (
+            ) : ( // Left-side checkbox for simple items or non-icon standalone items
                 <Checkbox
                     id={`task-checkbox-detail-${task.id}`}
                     checked={!!isCompleted}
@@ -350,7 +349,7 @@ export function RecursiveChecklistItem({
             </CardTitle>
         </div>
 
-        {isSimpleDetailItem && hasSubTasks && (
+        {isSimpleDetailItem && hasSubTasks && ( // Expander for simple items that have non-navigable sub-content
           <button
             onClick={(e) => { e.stopPropagation(); setIsExpandedForSimpleDetailItem(!isExpandedForSimpleDetailItem);}}
             className="p-1 text-muted-foreground hover:text-foreground expander-button self-center"
@@ -367,7 +366,9 @@ export function RecursiveChecklistItem({
             id={`task-content-${task.id}`}
             className={cn(
                 "pl-10 pr-3 pb-3 pt-1 sm:pl-12 sm:pr-4 sm:pb-4",
-                (bodyContentTexts.length > 0 || task.videos?.length || task.images?.length || task.notes?.length || task.cites?.length || (hasSubTasks && isExpandedForSimpleDetailItem)) ? "pt-2 sm:pt-2" : ""
+                 // Ensure content area has padding if it's actually showing something
+                (bodyContentTexts.length > 0 || task.videos?.length || task.images?.length || task.notes?.length || task.cites?.length || (isSimpleDetailItem && isExpandedForSimpleDetailItem && hasSubTasks)
+                ) ? "pt-2 sm:pt-2" : "" 
             )}
         >
           {bodyContentTexts.length > 0 && (
@@ -446,6 +447,7 @@ export function RecursiveChecklistItem({
             </div>
           )}
 
+          {/* Recursive rendering for sub-tasks of a simple detail item (if expanded) */}
           {isSimpleDetailItem && isExpandedForSimpleDetailItem && task.tasks && task.tasks.length > 0 && (
             <div className="mt-4 space-y-3">
               {task.tasks.map((subTask) => (
@@ -456,9 +458,10 @@ export function RecursiveChecklistItem({
                   onToggleCompletion={onToggleCompletion}
                   onImageZoom={onImageZoom}
                   taskCompletionStates={taskCompletionStates}
-                  level={level + 1}
+                  level={level + 1} // Increase level for nested simple items
                   displayContext="detailPage"
                   onNavigate={onNavigate} 
+                  isStandaloneItem={false} // These are never standalone
                 />
               ))}
             </div>
@@ -468,3 +471,4 @@ export function RecursiveChecklistItem({
     </Card>
   );
 }
+
