@@ -137,7 +137,7 @@ export default function TaskDetailPage() {
       
       const updateChildrenRecursive = (currentTaskId: string, checkedStatus: boolean) => {
         newStates[currentTaskId] = checkedStatus;
-        const currentTask = findTaskByIdRecursive(initialChecklistItems, currentTaskId);
+        const currentTask = findTaskByIdRecursive(initialChecklistItems, currentTaskId); // Use all items for lookup
         if (currentTask && currentTask.tasks) {
           currentTask.tasks.forEach(child => updateChildrenRecursive(child.id, checkedStatus));
         }
@@ -146,9 +146,9 @@ export default function TaskDetailPage() {
       updateChildrenRecursive(taskId, isChecked);
 
       const updateParentRecursive = (currentTaskId: string) => {
-        const parentId = findParentIdRecursive(initialChecklistItems, currentTaskId);
+        const parentId = findParentIdRecursive(initialChecklistItems, currentTaskId); // Use all items for lookup
         if (parentId) {
-            const parentTask = findTaskByIdRecursive(initialChecklistItems, parentId);
+            const parentTask = findTaskByIdRecursive(initialChecklistItems, parentId); // Use all items for lookup
             if (parentTask && parentTask.tasks) {
                 const allSiblingsCompleted = parentTask.tasks.every(sibling => newStates[sibling.id]);
                 if(newStates[parentId] !== allSiblingsCompleted) {
@@ -280,7 +280,7 @@ export default function TaskDetailPage() {
            (task.images && task.images.length > 0) ||
            (task.notes && task.notes.length > 0) ||
            (task.cites && task.cites.length > 0) ||
-           (task.texts && task.texts.length > (task.name ? 0 : 1)); // if no name, texts[0] is title
+           (task.texts && task.texts.length > (task.name ? 0 : 1)); 
   };
 
 
@@ -288,7 +288,9 @@ export default function TaskDetailPage() {
     <main className="min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="w-full max-w-2xl">
         <AppHeader />
-        <CryptoFlightProgressBar currentStep={completedTopLevelTaskCount} totalSteps={totalTopLevelTaskCount} />
+        <div className="my-6"> {/* Added wrapper for margin */}
+          <CryptoFlightProgressBar currentStep={completedTopLevelTaskCount} totalSteps={totalTopLevelTaskCount} />
+        </div>
 
         <Card className="shadow-xl w-full mt-6 flex flex-col max-h-[calc(100vh-14rem)] sm:max-h-[calc(100vh-12rem)]">
           <CardHeader className="flex flex-row items-start space-x-4 p-4 sm:p-6">

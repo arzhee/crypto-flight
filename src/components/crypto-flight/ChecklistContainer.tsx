@@ -69,7 +69,7 @@ export function ChecklistContainer() {
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
-  }, [checklistData]); // Added checklistData to dependencies to re-run if it changes (though it's static here)
+  }, [checklistData]); 
 
   useEffect(() => {
     if (mounted) {
@@ -110,7 +110,7 @@ export function ChecklistContainer() {
     setAllTaskItemsCompletion(prevAll => {
       const newAll = { ...prevAll };
       const taskToUpdate = checklistData.find(item => item.id === taskId);
-      const idsToUpdate = taskToUpdate ? getAllTaskIds([taskToUpdate]) : [taskId]; // getAllTaskIds expects an array
+      const idsToUpdate = taskToUpdate ? getAllTaskIds([taskToUpdate]) : [taskId]; 
       
       idsToUpdate.forEach(id => {
         newAll[id] = isChecked;
@@ -159,7 +159,9 @@ export function ChecklistContainer() {
           style={{ zIndex: 100 }}
         />
       )}
-      <CryptoFlightProgressBar currentStep={completedCount} totalSteps={totalCount} />
+      <div className="my-6"> {/* Added wrapper for margin */}
+        <CryptoFlightProgressBar currentStep={completedCount} totalSteps={totalCount} />
+      </div>
 
       <div>
         {checklistData.map((item) => (

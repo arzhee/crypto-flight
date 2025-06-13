@@ -406,7 +406,7 @@ export default function TaskDetailPage() {
                           )}
 
                           {step.images && step.images.length > 0 && (
-                            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
                               {step.images.map((imageUrl, index) => {
                                 let aiHintForImage = imageUrl.startsWith('https://placehold.co') ? "placeholder image" : "task illustration";
                                 return (
@@ -437,7 +437,7 @@ export default function TaskDetailPage() {
                           )}
 
                           {step.cites && step.cites.length > 0 && (
-                            <div className="mt-4 pt-3 border-t border-muted/30">
+                            <div className="mt-4 pt-1 border-t border-muted/30">
                               <ul className="list-none pl-0 space-y-1">
                                 {step.cites.map((cite, citeIndex) => (
                                   <li 
