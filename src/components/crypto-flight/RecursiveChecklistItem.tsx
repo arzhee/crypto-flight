@@ -173,13 +173,14 @@ export function RecursiveChecklistItem({
     if (isStandaloneItem) {
       detailPageSpecificClasses = 'bg-card'; // Main content for simple task
     } else { // Child/nested tasks
-      if (level > 0) {
+      if (level > 0) { // Nested (level 1+ sub-tasks)
         detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30 p-3 rounded-lg shadow-sm hover:shadow-md';
-      } else { // level === 0 direct children
-        detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30';
+      } else { // Direct child items on detail page (level 0, !isStandaloneItem)
+        detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30'; // Grey background for FAQ items etc.
       }
     }
   }
+
 
   const cardClassName = cn(
     cardBaseClasses,
@@ -213,15 +214,15 @@ export function RecursiveChecklistItem({
   }
 
 
-  let cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0"; // Default for main page content
+  let cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
   if (displayContext === 'detailPage') {
-    if (level > 0 || isStandaloneItem) { // Nested or standalone item content area
+    if (level > 0 || isStandaloneItem) {
       cardContentPaddingClass = "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4";
-    } else if (level === 0 && !isStandaloneItem) { // Direct child item content area
+    } else if (level === 0 && !isStandaloneItem) {
        if (hasOwnContent) {
-          cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
-       } else if (hasSubTasks) { // Direct child that only has subtasks, no direct own content
-          cardContentPaddingClass = "p-4 sm:p-6 pt-0";
+          cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0"; // Explicitly pt-0
+       } else if (hasSubTasks) {
+          cardContentPaddingClass = "p-4 sm:p-6 pt-0"; // Explicitly pt-0
        }
     }
   }
@@ -341,7 +342,8 @@ export function RecursiveChecklistItem({
             id={`task-content-${task.id}`}
             className={cn(
                 cardContentPaddingClass,
-                (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : ""
+                (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : "",
+                isCompleted && !isStandaloneItem ? 'bg-success/5 dark:bg-success/15' : ''
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
