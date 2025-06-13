@@ -345,7 +345,7 @@ export default function TaskDetailPage() {
               disabled={!allVisibleTasksCompleted}
               className="bg-accent text-accent-foreground hover:bg-accent/90 focus-visible:ring-accent disabled:opacity-60"
             >
-              Complete: {mainTask.name}
+              Mark as Complete
             </Button>
           </CardFooter>
         </Card>
