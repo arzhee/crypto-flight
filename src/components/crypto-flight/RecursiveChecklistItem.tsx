@@ -164,17 +164,30 @@ export function RecursiveChecklistItem({
     (task.notes && task.notes.length > 0) ||
     (task.cites && task.cites.length > 0);
 
-  const cardClassName = cn(
-    "mb-4 shadow-lg transition-all duration-300 ease-in-out",
-    displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '',
-    (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage') ? 'cursor-pointer' : '',
-    displayContext === 'detailPage' ?
-      (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') :
-      'bg-card',
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '',
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `pl-${level * 2} sm:pl-${level * 4}` : ''
-  );
+  const cardBaseClasses = "mb-4 shadow-lg transition-all duration-300 ease-in-out";
+  const mainPageClasses = displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '';
+  const cursorClasses = (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage') ? 'cursor-pointer' : '';
+  
+  let detailPageSpecificClasses = 'bg-card';
+  if (displayContext === 'detailPage') {
+    if (isStandaloneItem) {
+      detailPageSpecificClasses = 'bg-card'; // Main content for simple task
+    } else { // Child/nested tasks
+      if (level > 0) {
+        detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30 p-3 rounded-lg shadow-sm hover:shadow-md';
+      } else { // level === 0 direct children
+        detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30';
+      }
+    }
+  }
 
+  const cardClassName = cn(
+    cardBaseClasses,
+    mainPageClasses,
+    cursorClasses,
+    detailPageSpecificClasses
+  );
+  
   const showContentArea = displayContext === 'detailPage' && (isExpanded || isStandaloneItem) && (hasOwnContent || (hasSubTasks && !isStandaloneItem));
 
   const checkboxSizeClass = 'h-5 w-5 sm:h-6 sm:w-6';
@@ -190,15 +203,28 @@ export function RecursiveChecklistItem({
       : 'font-semibold text-lg sm:text-xl'
   );
   
-  const headerPaddingClass = displayContext === 'detailPage' ? 
-    ( (level > 0 || isStandaloneItem) ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'p-4 sm:p-6 pb-3 pt-3') : 
-    'p-4 sm:p-6';
+  let headerPaddingClass = 'p-4 sm:p-6'; // Default for main page
+  if (displayContext === 'detailPage') {
+    if (level > 0 || isStandaloneItem) { // Nested sub-tasks or standalone item content
+      headerPaddingClass = 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4';
+    } else { // Direct child items on detail page (level 0, !isStandaloneItem)
+      headerPaddingClass = 'p-4 sm:p-6 pb-3 pt-3';
+    }
+  }
 
-  const cardContentPaddingClass = displayContext === 'detailPage' ?
-    ( (level > 0 || isStandaloneItem) ? "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4" :
-      (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent) ? "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0" :
-      "p-4 sm:p-6 pt-0"
-    ) : "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
+
+  let cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0"; // Default for main page content
+  if (displayContext === 'detailPage') {
+    if (level > 0 || isStandaloneItem) { // Nested or standalone item content area
+      cardContentPaddingClass = "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4";
+    } else if (level === 0 && !isStandaloneItem) { // Direct child item content area
+       if (hasOwnContent) {
+          cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
+       } else if (hasSubTasks) { // Direct child that only has subtasks, no direct own content
+          cardContentPaddingClass = "p-4 sm:p-6 pt-0";
+       }
+    }
+  }
 
 
   return (
@@ -211,7 +237,7 @@ export function RecursiveChecklistItem({
           "flex flex-row space-x-3",
           isHeaderItemsStart ? 'items-start' : 'items-center',
           headerPaddingClass,
-          displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
+          displayContext === 'detailPage' && !isStandaloneItem && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
         <div className={cn("flex-grow flex space-x-3", isHeaderItemsStart ? 'items-start' : 'items-center')}>
             {ActualIcon ? (
