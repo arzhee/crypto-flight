@@ -256,6 +256,85 @@ const rawChecklistData: ChecklistItem[] =[
             "tasks": []
           }
         ]
+      },
+      {
+        "id": "bridge-argent",
+        "slug": "bridging-crypto-from-argent-mobile",
+        "name": "Bridging Crypto From Argent Mobile",
+        "icon": ArrowRightLeft,
+        "texts": ["Move crypto assets across different blockchains using Argent Mobile's bridging capabilities."],
+        "tasks": [
+          {
+            "id": "bridge-argent-fund-deposit",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Assets page of the Argent wallet, select the 'Fund' button then the 'From an exchange or other chain' button to make a deposit."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "bridge-argent-select-chain-token",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "In the 'Select chain' section, select the chain that will send the funds with its token in the 'Select token' section (e.g., xDAI from Gnosis Chain network). Once a token is selected, a deposit wallet address will be generated then select the 'Copy' button to copy the said address to the clipboard."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "bridge-argent-send-funds",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the wallet that sends funds to the Argent wallet (e.g., Coinbase Wallet), perform the sending of the requested token (e.g., xDAI) to the recipient's address."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "Always verify the recipient's address prior sending. Putting the wrong deposit address leads to the loss of funds."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "bridge-argent-wait-deposit",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After sending the token to the recipient's address, a 'Waiting for deposit' message will be shown on the Activity page. The expected token (e.g., DAI) should be shown in the Argent wallet on the Assets page in a few minutes."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       }
     ]
   },
@@ -444,1114 +523,1063 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "buy-ramp",
-    "slug": "buying-crypto-from-ramp-network",
-    "name": "Buying Crypto From Ramp Network",
+    "id": "managing-crypto-purchases",
+    "slug": "managing-crypto-purchases",
+    "name": "Managing Crypto Purchases",
     "icon": ShoppingBag,
-    "texts": ["Learn to buy crypto using Ramp Network, a service for converting traditional money."],
+    "texts": ["Understand different methods to buy cryptocurrencies using fiat money."],
+    "videos": [],
+    "images": [],
+    "notes": [],
+    "cites": [],
+    "completed": false,
     "tasks": [
       {
-        "id": "buy-ramp-check-address",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Prior to buying any crypto, kindly check first the wallet address as its recipient.",
-          "If using the Argent wallet, select the 'Fund' button and select the 'From another Starknet wallet' option.",
-          "If using the Rabby wallet, select the 'Receive Crypto' option then select the first option. Select the 'Copy Address' button to copy the specified wallet address to the clipboard."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "Tap the address below to copy it to the clipboard.",
-          "Transak does not currently support Argent wallet (which currently works in the Starknet network) in the meantime."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
+        "id": "buy-ramp",
+        "slug": "buying-crypto-from-ramp-network",
+        "name": "Buying Crypto From Ramp Network",
+        "icon": ShoppingBag,
+        "texts": ["Learn to buy crypto using Ramp Network, a service for converting traditional money."],
+        "tasks": [
+          {
+            "id": "buy-ramp-check-address",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Prior to buying any crypto, kindly check first the wallet address as its recipient.",
+              "If using the Argent wallet, select the 'Fund' button and select the 'From another Starknet wallet' option.",
+              "If using the Rabby wallet, select the 'Receive Crypto' option then select the first option. Select the 'Copy Address' button to copy the specified wallet address to the clipboard."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "Tap the address below to copy it to the clipboard.",
+              "Transak does not currently support Argent wallet (which currently works in the Starknet network) in the meantime."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-website",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the web browser, go to the website of Ramp Network (https://ramp.network) then select the 'Buy & sell crypto' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-enter-details",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the window modal, enter the USD value and the crypto to be bought (etc., XDAI from Gnosis) then select the 'Proceed' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "When selecting a network, use Starknet network for the Argent wallet while Gnosis, Optimism or Arbitrum networks for the Rabby wallet."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-register",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Before checking out, register for an account first on the website then select the 'Proceed' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-enter-wallet",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After creating an account for the Ramp Network, enter the specified wallet address then select the 'Continue' button for checking out."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-payment-card",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From Step 2 in checking out, select the 'Card' option and 'Continue' button to proceed. Include the required card details then select the 'Add card' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "Depending on the card provided, provide the One-Time PIN (OTP) in the same window modal."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-confirm-order",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Verify the details provided then select the 'Buy now' button to confirm the order."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-wallet-type",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "When asked what the type of wallet was provided from the previous tasks, select the 'Self-hosted (I have full control)' option. Confirm the wallet ownership by selecting the 'I confirm the ownership of the wallet' option then select the 'Continue' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-kyc",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "If asked for the Know Your Customer (KYC) [1] procedure, prepare the required documents (e.g., Passport, Driver's License, etc.) first then select the 'Proceed' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [
+              "[Coinbase. (n.d.). What is Know Your Customer (KYC)?](https://www.coinbase.com/learn/crypto-basics/what-is-kyc) Coinbase Learn."
+            ],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-security-code",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After verifying the KYC process, enter the required value in the 'Security code' field then select the 'Pay with Card' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "There may be an instance that an OTP is required from the card issuer. Enter the required value to continue."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-ramp-success",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the transaction is successful from the card issuer, the specified crypto should be sent to the specified wallet."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       },
       {
-        "id": "buy-ramp-website",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the web browser, go to the website of Ramp Network (https://ramp.network) then select the 'Buy & sell crypto' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-enter-details",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the window modal, enter the USD value and the crypto to be bought (etc., XDAI from Gnosis) then select the 'Proceed' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "When selecting a network, use Starknet network for the Argent wallet while Gnosis, Optimism or Arbitrum networks for the Rabby wallet."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-register",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Before checking out, register for an account first on the website then select the 'Proceed' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-enter-wallet",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After creating an account for the Ramp Network, enter the specified wallet address then select the 'Continue' button for checking out."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-payment-card",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From Step 2 in checking out, select the 'Card' option and 'Continue' button to proceed. Include the required card details then select the 'Add card' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "Depending on the card provided, provide the One-Time PIN (OTP) in the same window modal."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-confirm-order",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Verify the details provided then select the 'Buy now' button to confirm the order."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-wallet-type",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "When asked what the type of wallet was provided from the previous tasks, select the 'Self-hosted (I have full control)' option. Confirm the wallet ownership by selecting the 'I confirm the ownership of the wallet' option then select the 'Continue' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-kyc",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "If asked for the Know Your Customer (KYC) [1] procedure, prepare the required documents (e.g., Passport, Driver's License, etc.) first then select the 'Proceed' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [
-          "[Coinbase. (n.d.). What is Know Your Customer (KYC)?](https://www.coinbase.com/learn/crypto-basics/what-is-kyc) Coinbase Learn."
-        ],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-security-code",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After verifying the KYC process, enter the required value in the 'Security code' field then select the 'Pay with Card' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "There may be an instance that an OTP is required from the card issuer. Enter the required value to continue."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-ramp-success",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the transaction is successful from the card issuer, the specified crypto should be sent to the specified wallet."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
+        "id": "buy-transak-gcash",
+        "slug": "buying-crypto-from-transak-using-gcash",
+        "name": "Buying Crypto From Transak using Gcash",
+        "icon": CreditCard,
+        "texts": ["Purchase crypto via Transak using Gcash for a localized payment experience."],
+        "tasks": [
+          {
+            "id": "buy-transak-check-address",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Before buying any crypto, kindly check first the wallet address as its recipient. From the Rabby wallet, select the 'Receive Crypto' option then select the first option. Select the 'Copy Address' button to copy the specified wallet address to the clipboard."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "Transak does not currently support Argent wallet (which currently works in the Starknet network) in the meantime."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-website",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the web browser, go to the website of Transak (https://transak.com) then select the 'Buy crypto' button as an Individual."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-enter-details",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the window modal, enter the PHP value and the crypto to be bought (etc., XDAI from Gnosis Chain) then select the 'Buy Now' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-paste-address",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "In the next section, paste the recipient address which was provided earlier then select the 'Buy USDC' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-email",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Next is enter the email to be provided for the login or registration then select the 'Continue' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-verify-code",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the email, get the verification code provided then select the 'Continue' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-kyc",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "If asked for the Know Your Customer (KYC) [1] procedure, prepare the required documents (e.g., Passport, Driver's License, etc.) first then select the 'Continue' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [
+              "[Coinbase. (n.d.). What is Know Your Customer (KYC)?](https://www.coinbase.com/learn/crypto-basics/what-is-kyc) Coinbase Learn."
+            ],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-confirm-details",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After verifying the KYC process, review the following details then select the 'Confirm' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-gcash-qr",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After being redirected to another page, proceed with the payment using Gcash QR."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-transak-success",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the payment is confirmed, the window will be redirected back to the previous page indicating the crypto has been successfully sent to the specified wallet address."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       }
     ]
   },
   {
-    "id": "buy-transak-gcash",
-    "slug": "buying-crypto-from-transak-using-gcash",
-    "name": "Buying Crypto From Transak using Gcash",
-    "icon": CreditCard,
-    "texts": ["Purchase crypto via Transak using Gcash for a localized payment experience."],
-    "tasks": [
-      {
-        "id": "buy-transak-check-address",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Before buying any crypto, kindly check first the wallet address as its recipient. From the Rabby wallet, select the 'Receive Crypto' option then select the first option. Select the 'Copy Address' button to copy the specified wallet address to the clipboard."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "Transak does not currently support Argent wallet (which currently works in the Starknet network) in the meantime."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-website",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the web browser, go to the website of Transak (https://transak.com) then select the 'Buy crypto' button as an Individual."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-enter-details",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the window modal, enter the PHP value and the crypto to be bought (etc., XDAI from Gnosis Chain) then select the 'Buy Now' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-paste-address",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "In the next section, paste the recipient address which was provided earlier then select the 'Buy USDC' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-email",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Next is enter the email to be provided for the login or registration then select the 'Continue' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-verify-code",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the email, get the verification code provided then select the 'Continue' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-kyc",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "If asked for the Know Your Customer (KYC) [1] procedure, prepare the required documents (e.g., Passport, Driver's License, etc.) first then select the 'Continue' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [
-          "[Coinbase. (n.d.). What is Know Your Customer (KYC)?](https://www.coinbase.com/learn/crypto-basics/what-is-kyc) Coinbase Learn."
-        ],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-confirm-details",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After verifying the KYC process, review the following details then select the 'Confirm' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-gcash-qr",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After being redirected to another page, proceed with the payment using Gcash QR."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-transak-success",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the payment is confirmed, the window will be redirected back to the previous page indicating the crypto has been successfully sent to the specified wallet address."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      }
-    ]
-  },
-  {
-    "id": "bridge-argent",
-    "slug": "bridging-crypto-from-argent-mobile",
-    "name": "Bridging Crypto From Argent Mobile",
-    "icon": ArrowRightLeft,
-    "texts": ["Move crypto assets across different blockchains using Argent Mobile's bridging capabilities."],
-    "tasks": [
-      {
-        "id": "bridge-argent-fund-deposit",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Assets page of the Argent wallet, select the 'Fund' button then the 'From an exchange or other chain' button to make a deposit."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "bridge-argent-select-chain-token",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "In the 'Select chain' section, select the chain that will send the funds with its token in the 'Select token' section (e.g., xDAI from Gnosis Chain network). Once a token is selected, a deposit wallet address will be generated then select the 'Copy' button to copy the said address to the clipboard."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "bridge-argent-send-funds",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the wallet that sends funds to the Argent wallet (e.g., Coinbase Wallet), perform the sending of the requested token (e.g., xDAI) to the recipient's address."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "Always verify the recipient's address prior sending. Putting the wrong deposit address leads to the loss of funds."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "bridge-argent-wait-deposit",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After sending the token to the recipient's address, a 'Waiting for deposit' message will be shown on the Activity page. The expected token (e.g., DAI) should be shown in the Argent wallet on the Assets page in a few minutes."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      }
-    ]
-  },
-  {
-    "id": "realt-account",
-    "slug": "creating-a-realt-account",
-    "name": "Creating a RealT Account",
-    "icon": User,
-    "texts": ["Register on RealT to explore fractional real estate investments via tokens."],
-    "tasks": [
-      {
-        "id": "realt-account-get-started",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Go to the RealT website (https://realt.co) then select the 'Get Started' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-register-details",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the My account page, fill in the required details in the Register section then select the 'Register' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-activate-email",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After the registration, check the email from RealToken, Inc. for the activation link then select the 'click here' link."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-complete-registration",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the account has been activated, select the 'Complete Registration' button to continue the registration process."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "Alternatively, select the 'Learn About RealT' button to learn more about its concept and its use cases."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-kyc",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the My Account page, scroll down to the specified page for their Know Your Customer (KYC) [1] procedure. Prepare the required documents (e.g., Passport, Driver's License, etc.) first then select the 'Continue' button to proceed."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [
-          "[Coinbase. (n.d.). What is Know Your Customer (KYC)?](https://www.coinbase.com/learn/crypto-basics/what-is-kyc) Coinbase Learn."
-        ],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-kyc-success",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once approved, a window modal will appear showing that the KYC procedure was successful. Select the 'Our Projects' button to continue to the next step."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-proceed-buy",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Proceed to buy any property on the Our Projects page. Check the Buying a Property from RealT guide on how to buy a property first-time."
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-prereq-wallet",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Prior to buying a property from RealT, a crypto wallet (e.g., Rabby wallet) is required with a balance of at least $50 XDAI in the Gnosis Chain. Please see the following guides below for the specified prerequisite:",
-          "Creating Crypto Wallet from Rabby Mobile",
-          "Buying Crypto from Transak",
-          "Buying Crypto from Ramp Network"
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-signin",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Go to the RealT website (https://realt.co) then select the 'Register / Sign In' button to sign in."
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-portfolio-link",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After placing the order from the Checkout page, select the 'your Portfolio' link in the Wallet Setup section to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-get-wallet",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Your Portfolio page, select the 'Get a RealToken Wallet' button to create the specified crypto wallet. If still asked, select the 'Get Started' button to continue, accept the terms and conditions in the window modal then select the 'Enroll' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "If asked for the Multi Factor Authentication (MFA), it is also possible to skip it for now then configure it after creating the crypto wallet."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-social-login",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After connecting through social login (e.g., Google), select the 'Initialize Wallet' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-copy-address",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the crypto wallet is created, copy the wallet address found in the Property Wallet section for reference then proceed to step 8 of the Buying a Property from RealT guide to proceed with the payment of the first ordered property."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "realt-account-rabby-dapps",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Rabby wallet, select the 'Dapps' button then access the Request Finance website (https://app.request.finance)."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      }
-    ]
-  },
-  {
-    "id": "buy-realt-property",
-    "slug": "buying-a-property-from-realt",
-    "name": "Buying a Property from RealT",
+    "id": "exploring-rwa-realt",
+    "slug": "exploring-rwa-realt",
+    "name": "Exploring Real World Assets (RWA) with RealT",
     "icon": Home,
-    "texts": ["Navigate the process of acquiring your first tokenized property on RealT."],
+    "texts": ["Dive into tokenized real estate investments with RealT, bridging digital assets with tangible property."],
+    "videos": [],
+    "images": [],
+    "notes": [],
+    "cites": [],
+    "completed": false,
     "tasks": [
       {
-        "id": "buy-realt-prereq",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Before buying a property from RealT, a crypto wallet (e.g., Rabby wallet) is required. The specified wallet should have enough XDAI in the Gnosis Chain to cover the cost of the property to buy. Please see the following guides below for the specified prerequisite:",
-          "Creating Crypto Wallet from Rabby Mobile",
-          "Buying Crypto from Transak",
-          "Buying Crypto from Ramp Network"
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [
-          "XDAI is the main cryptocurrency that operates on the Gnosis Chain, a blockchain network based on Ethereum."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
+        "id": "realt-account",
+        "slug": "creating-a-realt-account",
+        "name": "Creating a RealT Account",
+        "icon": User,
+        "texts": ["Register on RealT to explore fractional real estate investments via tokens."],
+        "tasks": [
+          {
+            "id": "realt-account-get-started",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Go to the RealT website (https://realt.co) then select the 'Get Started' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-register-details",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the My account page, fill in the required details in the Register section then select the 'Register' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-activate-email",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After the registration, check the email from RealToken, Inc. for the activation link then select the 'click here' link."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-complete-registration",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the account has been activated, select the 'Complete Registration' button to continue the registration process."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "Alternatively, select the 'Learn About RealT' button to learn more about its concept and its use cases."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-kyc",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the My Account page, scroll down to the specified page for their Know Your Customer (KYC) [1] procedure. Prepare the required documents (e.g., Passport, Driver's License, etc.) first then select the 'Continue' button to proceed."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [
+              "[Coinbase. (n.d.). What is Know Your Customer (KYC)?](https://www.coinbase.com/learn/crypto-basics/what-is-kyc) Coinbase Learn."
+            ],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-kyc-success",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once approved, a window modal will appear showing that the KYC procedure was successful. Select the 'Our Projects' button to continue to the next step."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-proceed-buy",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Proceed to buy any property on the Our Projects page. Check the Buying a Property from RealT guide on how to buy a property first-time."
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-prereq-wallet",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Prior to buying a property from RealT, a crypto wallet (e.g., Rabby wallet) is required with a balance of at least $50 XDAI in the Gnosis Chain. Please see the following guides below for the specified prerequisite:",
+              "Creating Crypto Wallet from Rabby Mobile",
+              "Buying Crypto from Transak",
+              "Buying Crypto from Ramp Network"
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-signin",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Go to the RealT website (https://realt.co) then select the 'Register / Sign In' button to sign in."
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-portfolio-link",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After placing the order from the Checkout page, select the 'your Portfolio' link in the Wallet Setup section to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-get-wallet",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Your Portfolio page, select the 'Get a RealToken Wallet' button to create the specified crypto wallet. If still asked, select the 'Get Started' button to continue, accept the terms and conditions in the window modal then select the 'Enroll' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "If asked for the Multi Factor Authentication (MFA), it is also possible to skip it for now then configure it after creating the crypto wallet."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-social-login",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After connecting through social login (e.g., Google), select the 'Initialize Wallet' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-copy-address",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the crypto wallet is created, copy the wallet address found in the Property Wallet section for reference then proceed to step 8 of the Buying a Property from RealT guide to proceed with the payment of the first ordered property."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "realt-account-rabby-dapps",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Rabby wallet, select the 'Dapps' button then access the Request Finance website (https://app.request.finance)."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       },
       {
-        "id": "buy-realt-signin",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Go to the RealT website (https://realt.co) then select the 'Register / Sign In' button. From the Login section, fill in the required details then select the 'Log In' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
+        "id": "buy-realt-property",
+        "slug": "buying-a-property-from-realt",
+        "name": "Buying a Property from RealT",
+        "icon": Home,
+        "texts": ["Navigate the process of acquiring your first tokenized property on RealT."],
+        "tasks": [
+          {
+            "id": "buy-realt-prereq",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Before buying a property from RealT, a crypto wallet (e.g., Rabby wallet) is required. The specified wallet should have enough XDAI in the Gnosis Chain to cover the cost of the property to buy. Please see the following guides below for the specified prerequisite:",
+              "Creating Crypto Wallet from Rabby Mobile",
+              "Buying Crypto from Transak",
+              "Buying Crypto from Ramp Network"
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [
+              "XDAI is the main cryptocurrency that operates on the Gnosis Chain, a blockchain network based on Ethereum."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-signin",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Go to the RealT website (https://realt.co) then select the 'Register / Sign In' button. From the Login section, fill in the required details then select the 'Log In' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-add-to-cart",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Our Projects page, find a property to buy by selecting the 'Add to Cart' button on each property."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-checkout-cart",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After adding the specified properties to the cart, select the shopping cart icon in the upper right of the website to proceed for checkout."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-verify-cart",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Cart page, verify the added properties then select the 'Proceed to Checkout' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-billing-payment",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Checkout page, fill in the required fields in the Billing details section then select Crypto Invoice as the mode of payment then select the Gnosis in the Payment Chain field and xDAI in the Payment Currency field. Select the checkbox button to agree to the website's terms and conditions then select the 'Place Order' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "Alternatively, a credit card or debit card can also be used as the mode of payment. Please take note of the 1.50% charge for the card processing fee."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-invoice-email",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After placing the order from the Checkout page, the message below should be shown that the process was completed successfully:",
+              "Your Invoice Will Arrive Shortly.",
+              "An email should arrive in your inbox at rollogutib@gmail.com within the next 60 minutes. This email will provide a link to securely make your payment for this order.",
+              "Please check your spam filter if you do not see the email shortly.",
+              "Please check your inbox and pay promptly. The invoice for this order will expire in 10 hours, after which the order will be cancelled."
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [
+              "If this is a first-time buying a property, kindly go back to the Creating a RealT Account guide first to finalize the creation of a Real Token crypto wallet."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-wallet-setup-link",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After placing the order from the Checkout page, select the 'your Portfolio' link in the Wallet Setup section to continue:",
+              "Your Invoice Will Arrive Shortly.",
+              "An email should arrive in your inbox at rollogutib@gmail.com within the next 60 minutes. This email will provide a link to securely make your payment for this order.",
+              "Please check your spam filter if you do not see the email shortly.",
+              "Please check your inbox and pay promptly. The invoice for this order will expire in 10 hours, after which the order will be cancelled.",
+              "Wallet Setup",
+              "It's time to set up your digital wallet! This wallet will hold your RealTokens and the rent you earn."
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-dapp",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Rabby wallet, select the 'Dapps' button then access the Request Finance website (https://app.request.finance)."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-signup",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Login page of the Request Finance, select the 'Sign up' link to create an account. Fill in the required details in the form then select the 'Create your account' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "If the account was already created, proceed instead to login the credentials then select the 'Login' button."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-verify",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the email, select the 'Confirm my account' button to verify the provided email for the created account. Once verified, select the 'Get Started' button to proceed."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-complete-account",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Finalize the requested information to complete the account creation."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "If redirected to the Tasks page, kindly ignore the required tasks for now to proceed directly to the Home page."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-bills",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Home page, select the hamburger icon in the upper right part of the website to go to the Bills page from Payments section. Then find the latest invoice to be paid in the Awaiting Payment section (e.g., June 6th)."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-pay",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "In the specified invoice, select the 'Pay Now' button to proceed with its payment. If asked, select the 'Yes, the information is correct' button. Then proceed to connect a crypto wallet using the Rabby wallet. If asked to connect to the specified website, select the 'Connect' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "buy-realt-request-finance-confirm-pay",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the crypto wallet is connected, select the 'Pay Now' button in the window modal to start its payment. From the Rabby wallet, select the 'Sign' then 'Confirm' buttons respectively to confirm."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       },
       {
-        "id": "buy-realt-add-to-cart",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Our Projects page, find a property to buy by selecting the 'Add to Cart' button on each property."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-checkout-cart",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After adding the specified properties to the cart, select the shopping cart icon in the upper right of the website to proceed for checkout."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-verify-cart",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Cart page, verify the added properties then select the 'Proceed to Checkout' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-billing-payment",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Checkout page, fill in the required fields in the Billing details section then select Crypto Invoice as the mode of payment then select the Gnosis in the Payment Chain field and xDAI in the Payment Currency field. Select the checkbox button to agree to the website's terms and conditions then select the 'Place Order' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "Alternatively, a credit card or debit card can also be used as the mode of payment. Please take note of the 1.50% charge for the card processing fee."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-invoice-email",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After placing the order from the Checkout page, the message below should be shown that the process was completed successfully:",
-          "Your Invoice Will Arrive Shortly.",
-          "An email should arrive in your inbox at rollogutib@gmail.com within the next 60 minutes. This email will provide a link to securely make your payment for this order.",
-          "Please check your spam filter if you do not see the email shortly.",
-          "Please check your inbox and pay promptly. The invoice for this order will expire in 10 hours, after which the order will be cancelled."
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [
-          "If this is a first-time buying a property, kindly go back to the Creating a RealT Account guide first to finalize the creation of a Real Token crypto wallet."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-wallet-setup-link",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After placing the order from the Checkout page, select the 'your Portfolio' link in the Wallet Setup section to continue:",
-          "Your Invoice Will Arrive Shortly.",
-          "An email should arrive in your inbox at rollogutib@gmail.com within the next 60 minutes. This email will provide a link to securely make your payment for this order.",
-          "Please check your spam filter if you do not see the email shortly.",
-          "Please check your inbox and pay promptly. The invoice for this order will expire in 10 hours, after which the order will be cancelled.",
-          "Wallet Setup",
-          "It's time to set up your digital wallet! This wallet will hold your RealTokens and the rent you earn."
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-dapp",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Rabby wallet, select the 'Dapps' button then access the Request Finance website (https://app.request.finance)."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-signup",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Login page of the Request Finance, select the 'Sign up' link to create an account. Fill in the required details in the form then select the 'Create your account' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "If the account was already created, proceed instead to login the credentials then select the 'Login' button."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-verify",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the email, select the 'Confirm my account' button to verify the provided email for the created account. Once verified, select the 'Get Started' button to proceed."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-complete-account",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Finalize the requested information to complete the account creation."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "If redirected to the Tasks page, kindly ignore the required tasks for now to proceed directly to the Home page."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-bills",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Home page, select the hamburger icon in the upper right part of the website to go to the Bills page from Payments section. Then find the latest invoice to be paid in the Awaiting Payment section (e.g., June 6th)."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-pay",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "In the specified invoice, select the 'Pay Now' button to proceed with its payment. If asked, select the 'Yes, the information is correct' button. Then proceed to connect a crypto wallet using the Rabby wallet. If asked to connect to the specified website, select the 'Connect' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "buy-realt-request-finance-confirm-pay",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the crypto wallet is connected, select the 'Pay Now' button in the window modal to start its payment. From the Rabby wallet, select the 'Sign' then 'Confirm' buttons respectively to confirm."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      }
-    ]
-  },
-  {
-    "id": "sign-realt-contracts",
-    "slug": "signing-contracts-from-realt",
-    "name": "Signing Contracts from RealT",
-    "icon": FileText,
-    "texts": ["Complete your RealT property purchase by digitally signing the required contracts."],
-    "tasks": [
-      {
-        "id": "sign-realt-check-paid",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Before signing any contracts from RealT, kindly check that the specified property has been paid from Request Finance."
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [
-          "Please see the Buying a Property from RealT guide on how to buy a property from the RealT website."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "sign-realt-tediji-email",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Find the email from Tediji for the recently bought property then select the 'Sign' button to continue."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "sign-realt-tediji-review-sign",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Tediji website, review the requested fields in the contract by selecting the 'Next' button. Once the requested fields are all checked, select the 'Sign' button to proceed."
-        ],
-        "videos": [],
-        "images": [],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "sign-realt-tediji-consent",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "In the Consent window modal, check the required checkbox fields then select the 'Next' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "sign-realt-tediji-signature",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "In the Signature window modal, encode the requested signature then select the 'Sign' button to finalize the contract."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "sign-realt-tediji-success",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the property contract has been signed, a message will be shown that the required documents were signed successfully."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
+        "id": "sign-realt-contracts",
+        "slug": "signing-contracts-from-realt",
+        "name": "Signing Contracts from RealT",
+        "icon": FileText,
+        "texts": ["Complete your RealT property purchase by digitally signing the required contracts."],
+        "tasks": [
+          {
+            "id": "sign-realt-check-paid",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Before signing any contracts from RealT, kindly check that the specified property has been paid from Request Finance."
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [
+              "Please see the Buying a Property from RealT guide on how to buy a property from the RealT website."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "sign-realt-tediji-email",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Find the email from Tediji for the recently bought property then select the 'Sign' button to continue."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "sign-realt-tediji-review-sign",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Tediji website, review the requested fields in the contract by selecting the 'Next' button. Once the requested fields are all checked, select the 'Sign' button to proceed."
+            ],
+            "videos": [],
+            "images": [],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "sign-realt-tediji-consent",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "In the Consent window modal, check the required checkbox fields then select the 'Next' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "sign-realt-tediji-signature",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "In the Signature window modal, encode the requested signature then select the 'Sign' button to finalize the contract."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "sign-realt-tediji-success",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the property contract has been signed, a message will be shown that the required documents were signed successfully."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       }
     ]
   },
