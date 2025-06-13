@@ -343,7 +343,7 @@ export function RecursiveChecklistItem({
             className={cn(
                 cardContentPaddingClass,
                 (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : "",
-                isCompleted && !isStandaloneItem ? 'bg-success/5 dark:bg-success/15' : ''
+                isCompleted && !isStandaloneItem ? 'bg-success/10 dark:bg-success/20' : ''
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
@@ -355,7 +355,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.videos && task.videos.length > 0 && (
-            <div className="mt-2 space-y-3">
+            <div className="space-y-3">
               {task.videos.map((videoUrl, index) => {
                 const embedUrl = getYouTubeEmbedUrl(videoUrl);
                 return embedUrl ? (
@@ -377,7 +377,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.images && task.images.length > 0 && (
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
               {task.images.map((imageUrl, index) => (
                 <TaskStepImage
                   key={`image-${index}`}
