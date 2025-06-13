@@ -238,7 +238,7 @@ export function RecursiveChecklistItem({
           "flex flex-row space-x-3",
           isHeaderItemsStart ? 'items-start' : 'items-center',
           headerPaddingClass,
-          displayContext === 'detailPage' && !isStandaloneItem && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
+          displayContext === 'detailPage' && !isStandaloneItem && isCompleted ? 'bg-success/5 dark:bg-success/15' : ''
       )}>
         <div className={cn("flex-grow flex space-x-3", isHeaderItemsStart ? 'items-start' : 'items-center')}>
             {ActualIcon ? (
