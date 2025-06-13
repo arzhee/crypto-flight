@@ -152,7 +152,6 @@ export function RecursiveChecklistItem({
     if (displayContext === 'mainPage' && task.slug && onNavigate) {
       onNavigate(task.slug);
     } else if (displayContext === 'detailPage') {
-        // Only toggle completion if it's not a standalone item being expanded/collapsed OR if it has no sub-tasks
         if (!isStandaloneItem || !(task.tasks && task.tasks.length > 0)) {
            onToggleCompletion(task.id, !isCompleted);
         }
@@ -215,14 +214,13 @@ export function RecursiveChecklistItem({
     }
   }
 
-
   let cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
   if (displayContext === 'detailPage') {
     if (level > 0 || isStandaloneItem) { 
       cardContentPaddingClass = "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4";
     } else if (level === 0 && !isStandaloneItem) { 
        if (hasOwnContent) {
-         // Default padding includes pt-0
+         cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
        } else if (hasSubTasks) { 
           cardContentPaddingClass = "p-4 sm:p-6 pt-0"; 
        }
@@ -357,7 +355,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.videos && task.videos.length > 0 && (
-            <div className="mt-3 space-y-3">
+            <div className="space-y-3">
               {task.videos.map((videoUrl, index) => {
                 const embedUrl = getYouTubeEmbedUrl(videoUrl);
                 return embedUrl ? (
@@ -379,7 +377,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.images && task.images.length > 0 && (
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
               {task.images.map((imageUrl, index) => (
                 <TaskStepImage
                   key={`image-${index}`}
@@ -397,7 +395,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.notes && task.notes.length > 0 && (
-            <div className="mt-3 space-y-2">
+            <div className="space-y-2">
               {task.notes.map((note, noteIndex) => (
                 <Alert key={`note-${noteIndex}`} className="border-primary/50 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground/90 text-xs">
                   <Info className="h-4 w-4 text-primary dark:text-primary-foreground/90" />
