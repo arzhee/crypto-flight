@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import NextImage from 'next/image';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, ChevronDown, ChevronRight, Square, CheckSquare as CheckSquareIcon } from 'lucide-react';
+import { Info, ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -126,19 +126,19 @@ export function RecursiveChecklistItem({
   isStandaloneItem = false,
 }: RecursiveChecklistItemProps) {
   const [isExpanded, setIsExpanded] = useState(
-    (displayContext === 'detailPage' && level === 0 && !isStandaloneItem) || 
-    (task.tasks && task.tasks.length > 0 && task.tasks.every(st => taskCompletionStates[st.id])) 
+    (displayContext === 'detailPage' && level === 0 && !isStandaloneItem) ||
+    (task.tasks && task.tasks.length > 0 && task.tasks.every(st => taskCompletionStates[st.id]))
   );
 
   const ActualIcon = task.icon;
   const taskTitle = task.name || (task.texts && task.texts.length > 0 ? task.texts[0] : 'Unnamed Task');
-  
+
   const contentTexts = task.name || !(task.texts && task.texts.length > 0 && task.texts[0] === taskTitle)
     ? task.texts || []
     : (task.texts && task.texts.length > 1 ? task.texts.slice(1) : []);
 
-  const mainPageDescription = displayContext === 'mainPage' && task.name && task.texts && task.texts.length > 0 
-    ? task.texts[0] 
+  const mainPageDescription = displayContext === 'mainPage' && task.name && task.texts && task.texts.length > 0
+    ? task.texts[0]
     : null;
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -154,9 +154,9 @@ export function RecursiveChecklistItem({
       onToggleCompletion(task.id, !isCompleted);
     }
   };
-  
+
   const hasSubTasks = task.tasks && task.tasks.length > 0;
-  const hasOwnContent = 
+  const hasOwnContent =
     (contentTexts && contentTexts.length > 0) ||
     (task.videos && task.videos.length > 0) ||
     (task.images && task.images.length > 0) ||
@@ -167,28 +167,27 @@ export function RecursiveChecklistItem({
     "mb-4 shadow-lg transition-all duration-300 ease-in-out",
     displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '',
     (displayContext === 'mainPage' && task.slug) || displayContext === 'detailPage' ? 'cursor-pointer' : '',
-    displayContext === 'detailPage' ? 
-      (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') : 
+    displayContext === 'detailPage' ?
+      (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') :
       'bg-card',
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '', 
+     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '',
      displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `pl-${level * 2} sm:pl-${level * 4}` : ''
   );
-  
+
   const showContentArea = displayContext === 'detailPage' && (isExpanded || isStandaloneItem) && (hasOwnContent || (hasSubTasks && !isStandaloneItem));
 
-  const checkboxSizeClass = (displayContext === 'mainPage' || (displayContext === 'detailPage' && isStandaloneItem && !ActualIcon))
-    ? 'h-6 w-6 sm:h-7 sm:w-7' 
-    : 'h-5 w-5 sm:h-6 sm:w-6'; 
-
+  const checkboxSizeClass = 'h-5 w-5 sm:h-6 sm:w-6';
   const iconSizeClass = displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7';
+  
+  const isHeaderItemsStart = (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon));
 
   const cardTitleClass = cn(
     'font-headline',
-    displayContext === 'detailPage' 
+    displayContext === 'detailPage'
       ? (level > 0 || isStandaloneItem || !ActualIcon) ? '!font-normal text-base sm:text-lg' : 'font-semibold text-lg sm:text-xl'
       : 'font-semibold text-lg sm:text-xl'
   );
-  
+
   return (
     <Card
       className={cardClassName.trim()}
@@ -196,20 +195,25 @@ export function RecursiveChecklistItem({
       aria-label={taskTitle}
     >
       <CardHeader className={cn(
-          "flex flex-row space-x-3 p-4 sm:p-6", // Base padding and flex setup
-          displayContext === 'detailPage' ? 'items-start' : 'items-center', // Conditional alignment
+          "flex flex-row space-x-3 p-4 sm:p-6",
+          isHeaderItemsStart ? 'items-start' : 'items-center',
           displayContext === 'detailPage' ?
-            (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'pb-3 pt-3') : // Detail page specific padding (overrides parts of base)
+            (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'pb-3 pt-3') :
             '',
           displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
         {ActualIcon ? (
           <ActualIcon
-            className={cn(`shrink-0`, iconSizeClass, isCompleted ? 'text-success' : 'text-primary')}
+            className={cn(
+              `shrink-0`,
+              iconSizeClass,
+              isCompleted ? 'text-success' : 'text-primary',
+              isHeaderItemsStart && 'mt-1'
+            )}
             aria-hidden="true"
           />
         ) : (
-           <Checkbox 
+           <Checkbox
             id={`task-checkbox-${task.id}`}
             checked={isCompleted}
             onCheckedChange={(checked) => {
@@ -217,10 +221,10 @@ export function RecursiveChecklistItem({
             }}
             aria-labelledby={`task-title-${task.id}`}
             className={cn(
-                `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
+                `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary mt-1`,
                 checkboxSizeClass
             )}
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           />
         )}
         <div className="flex-grow">
@@ -229,9 +233,9 @@ export function RecursiveChecklistItem({
           </CardTitle>
         </div>
          {hasSubTasks && displayContext === 'detailPage' && !isStandaloneItem && (
-          <button 
-            onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded);}} 
-            className="p-1 text-muted-foreground hover:text-foreground expander-button self-center" // Added self-center for expander button
+          <button
+            onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded);}}
+            className="p-1 text-muted-foreground hover:text-foreground expander-button self-center"
             aria-expanded={isExpanded}
             aria-controls={`task-content-${task.id}`}
           >
@@ -247,19 +251,19 @@ export function RecursiveChecklistItem({
           </CardDescription>
         </CardContent>
       )}
-      
+
       {showContentArea && (
-        <CardContent 
+        <CardContent
             id={`task-content-${task.id}`}
             className={cn(
                 (displayContext === 'detailPage' && (level > 0 || isStandaloneItem))
-                    ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4" 
-                    : "p-4 sm:p-6", 
+                    ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4"
+                    : "p-4 sm:p-6",
                 (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent)
-                    ? "pt-0" 
-                    : ( (displayContext === 'detailPage' && (level > 0 || isStandaloneItem)) ? "pt-3" : "pt-0"), 
+                    ? "pt-0"
+                    : ( (displayContext === 'detailPage' && (level > 0 || isStandaloneItem)) ? "pt-3" : "pt-0"),
                 (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage')
-                    ? "pt-3" 
+                    ? "pt-3"
                     : ""
             )}
         >
