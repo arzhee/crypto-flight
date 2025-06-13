@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import NextImage from 'next/image';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, ChevronDown, ChevronRight, Square, CheckSquare as CheckSquareIcon } from 'lucide-react'; // Added CheckSquareIcon
+import { Info, ChevronDown, ChevronRight, Square, CheckSquare as CheckSquareIcon } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -107,11 +107,11 @@ interface RecursiveChecklistItemProps {
   isCompleted: boolean;
   onToggleCompletion: (taskId: string, isChecked: boolean) => void;
   onImageZoom: (imageUrl: string, allImages: string[], startIndex: number) => void;
-  taskCompletionStates: Record<string, boolean>; // Needed for recursive calls to pass down
+  taskCompletionStates: Record<string, boolean>;
   level: number;
   displayContext: 'mainPage' | 'detailPage';
   onNavigate?: (slug: string) => void;
-  isStandaloneItem?: boolean; // True if this item is the main subject of a detail page with no sub-tasks of its own
+  isStandaloneItem?: boolean;
 }
 
 export function RecursiveChecklistItem({
@@ -125,45 +125,34 @@ export function RecursiveChecklistItem({
   onNavigate,
   isStandaloneItem = false,
 }: RecursiveChecklistItemProps) {
-  // Expand direct children on detail page by default, unless it's a standalone item (which means it's the primary content).
   const [isExpanded, setIsExpanded] = useState(level === 0 && displayContext === 'detailPage' && !isStandaloneItem);
 
   const ActualIcon = task.icon;
 
   const taskTitle = task.name || (task.texts && task.texts.length > 0 ? task.texts[0] : 'Unnamed Task');
   
-  // Content texts are EITHER all texts (if task.name was the source of title)
-  // OR texts AFTER the first one (if texts[0] was the source of title and task.name was null)
-  // OR empty if no texts or texts[0] was title and no other texts exist.
   const contentTexts = task.name || !(task.texts && task.texts.length > 0 && task.texts[0] === taskTitle)
     ? task.texts || []
     : (task.texts && task.texts.length > 1 ? task.texts.slice(1) : []);
 
-
-  // For main page, description is texts[0] if it's different from the task name.
-  // If task.name is null, texts[0] becomes the title, so no separate description from texts[0].
   const mainPageDescription = displayContext === 'mainPage' && task.name && task.texts && task.texts.length > 0 
     ? task.texts[0] 
     : null;
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-    // Prevent action if click is on checkbox, label, image, link, or expander button
-    if (target.closest('[role="checkbox"]') || target.closest('label[for^="task-checkbox-"]') ||
-        target.closest('[data-image-zoomable="true"]') || target.closest('a') ||
-        target.closest('button.expander-button')) {
+    if (target.closest('[data-image-zoomable="true"]') || target.closest('a') ||
+        target.closest('button.expander-button') || target.closest('[role="checkbox"]')) { // Also prevent if click was on a checkbox
       return;
     }
 
     if (displayContext === 'mainPage' && task.slug && onNavigate) {
       onNavigate(task.slug);
     } else if (displayContext === 'detailPage') {
-      // Only toggle if it's a checkable item (leaf or standalone)
       const isLeafNode = !task.tasks || task.tasks.length === 0;
-      if (isLeafNode || isStandaloneItem) {
+      if (isLeafNode || isStandaloneItem || !ActualIcon) { // Toggle if leaf, standalone, or if it has the interactive checkbox icon
         onToggleCompletion(task.id, !isCompleted);
       } else if (task.tasks && task.tasks.length > 0) {
-        // If it's a parent node on detail page, toggle expansion
         setIsExpanded(!isExpanded);
       }
     }
@@ -184,22 +173,15 @@ export function RecursiveChecklistItem({
     displayContext === 'detailPage' ? 
       (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') : 
       'bg-card',
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '', // No margin for sub-tasks, handled by padding
-     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `pl-${level * 2} sm:pl-${level * 4}` : '' // Indentation via padding
+     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `ml-0 sm:ml-0` : '',
+     displayContext === 'detailPage' && level > 0 && !isStandaloneItem ? `pl-${level * 2} sm:pl-${level * 4}` : ''
   );
   
-  // Content area is shown on detail page if expanded OR if it's a standalone item, AND there's content to show.
   const showContentArea = displayContext === 'detailPage' && (isExpanded || isStandaloneItem) && (hasOwnContent || (hasSubTasks && !isStandaloneItem));
 
-  // Checkbox in header:
-  // - Always for main page items.
-  // - For detail page items only if it's a standalone item (main content of the page)
-  const shouldShowCheckboxInHeader =
-    displayContext === 'mainPage' || 
-    (displayContext === 'detailPage' && isStandaloneItem === true);
-
-
-  const DefaultIcon = isCompleted ? CheckSquareIcon : Square;
+  const checkboxSizeClass = displayContext === 'mainPage' || (displayContext === 'detailPage' && isStandaloneItem && !ActualIcon)
+    ? 'h-6 w-6 sm:h-7 sm:w-7' // Size for main page items or standalone items using checkbox as icon
+    : 'h-5 w-5 sm:h-6 sm:w-6'; // Size for sub-items on detail page using checkbox as icon
 
   return (
     <Card
@@ -208,57 +190,49 @@ export function RecursiveChecklistItem({
       aria-label={taskTitle}
     >
       <CardHeader className={cn(
-          "flex flex-row items-center space-x-3 p-4 sm:p-6", // items-center for better vertical alignment
+          "flex flex-row items-center space-x-3 p-4 sm:p-6",
           displayContext === 'detailPage' ? 
             (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'pb-3 pt-3') : 
-            '' // Main page uses default p-4/p-6
+            ''
       )}>
         {ActualIcon ? (
           <ActualIcon
             className={cn(
                 `shrink-0`,
-                displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7', // Adjusted sub-task icon size
+                displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7',
                 isCompleted ? 'text-success' : 'text-primary'
             )}
             aria-hidden="true"
           />
-        ) : ( // No ActualIcon provided by data;
-          // Use disabled Checkbox for detailPage sub-tasks without icon, or default Square/CheckSquare otherwise
-          (displayContext === 'detailPage' && !shouldShowCheckboxInHeader && !isStandaloneItem) ? (
-             <Checkbox
-              checked={isCompleted}
-              aria-hidden="true"
-              disabled
-              className={cn(
+        ) : (
+           <Checkbox // Interactive checkbox in icon slot if no ActualIcon
+            id={`task-icon-checkbox-${task.id}`}
+            checked={isCompleted}
+            onCheckedChange={(checked) => {
+                onToggleCompletion(task.id, typeof checked === 'boolean' ? checked : false);
+            }}
+            aria-labelledby={`task-title-${task.id}`}
+            className={cn(
                 `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
-                `h-6 w-6 sm:h-7 sm:w-7` // Match icon size
-              )}
-            />
-          ) : (
-             <DefaultIcon // Fallback for main page if no icon, or other non-checkbox scenarios
-              className={cn(
-                  `shrink-0`,
-                  displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7',
-                  isCompleted ? 'text-success' : 'text-primary'
-              )}
-              aria-hidden="true"
-            />
-          )
+                checkboxSizeClass
+            )}
+            onClick={(e) => e.stopPropagation()} // Important to prevent card click handler
+          />
         )}
         <div className="flex-grow">
           <CardTitle 
             className={cn(
               'font-headline',
               displayContext === 'detailPage' 
-                ? `!font-normal text-base sm:text-lg` // Ensure sub-task titles are normal weight
-                : 'font-semibold text-lg sm:text-xl'  // Main page titles are semi-bold
+                ? (level > 0 || isStandaloneItem || !ActualIcon) ? '!font-normal text-base sm:text-lg' : 'font-semibold text-lg sm:text-xl'
+                : 'font-semibold text-lg sm:text-xl'
             )}
             id={`task-title-${task.id}`}
           >
             {taskTitle}
           </CardTitle>
         </div>
-         {hasSubTasks && displayContext === 'detailPage' && !isStandaloneItem && ( // Expander for parent tasks on detail page
+         {hasSubTasks && displayContext === 'detailPage' && !isStandaloneItem && (
           <button 
             onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded);}} 
             className="p-1 text-muted-foreground hover:text-foreground expander-button"
@@ -268,20 +242,7 @@ export function RecursiveChecklistItem({
             {isExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
           </button>
         )}
-        {shouldShowCheckboxInHeader && ( // Interactive checkbox
-            <Checkbox
-            id={`task-checkbox-${task.id}`}
-            checked={isCompleted}
-            onCheckedChange={(checked) => {
-                onToggleCompletion(task.id, typeof checked === 'boolean' ? checked : false);
-            }}
-            aria-labelledby={`task-title-${task.id}`}
-            className={cn(
-                `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
-                displayContext === 'mainPage' ? 'h-6 w-6 sm:h-7 sm:w-7' : 'h-5 w-5 sm:h-6 sm:w-6' // Smaller for standalone items on detail
-            )}
-            />
-        )}
+        {/* Removed the separate header checkbox logic here */}
       </CardHeader>
 
       {displayContext === 'mainPage' && mainPageDescription && !isCompleted && (
@@ -296,21 +257,19 @@ export function RecursiveChecklistItem({
         <CardContent 
             id={`task-content-${task.id}`}
             className={cn(
-                "pt-0", // Base: no top padding unless specified by context
-                // General padding for sides/bottom
+                "pt-0",
                 (displayContext === 'detailPage' && (level > 0 || isStandaloneItem))
-                    ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4" // Deeper items or standalone items
-                    : "p-4 sm:p-6", // Top-level items on detail page (level 0) or main page items
-                // Conditional top padding based on specific scenarios
+                    ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4" 
+                    : "p-4 sm:p-6",
                 (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem))
-                    ? "pt-3" // Parent sub-task that is expandable
+                    ? "pt-3" 
                     : (hasOwnContent && displayContext === 'detailPage'
-                        ? (level === 0 && !isStandaloneItem ? 'pt-0' : 'pt-3') // Content for level 0 items on detail page gets pt-0
-                        : 'pt-0') // Default: no extra top padding from this rule
+                        ? (level === 0 && !isStandaloneItem ? 'pt-0' : 'pt-3') 
+                        : 'pt-0') 
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
-            <div className="space-y-1 text-sm text-foreground/90 leading-relaxed">
+            <div className="mt-2 space-y-1 text-sm text-foreground/90 leading-relaxed">
               {contentTexts.map((text, index) => (
                 <p key={`text-${index}`} dangerouslySetInnerHTML={{ __html: formatStepText(text) }} />
               ))}
@@ -371,7 +330,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.cites && task.cites.length > 0 && (
-            <div className="mt-3 pt-1 border-t border-muted/30">
+            <div className="mt-4 pt-3 border-t border-muted/30">
               <ul className="list-none pl-0 space-y-1">
                 {task.cites.map((cite, citeIndex) => (
                   <li
@@ -385,21 +344,18 @@ export function RecursiveChecklistItem({
             </div>
           )}
 
-          {/* Recursive rendering of sub-tasks within the detail page context */}
           {displayContext === 'detailPage' && isExpanded && task.tasks && task.tasks.length > 0 && !isStandaloneItem && (
             <div className="mt-4 space-y-3">
               {task.tasks.map((subTask) => (
                 <RecursiveChecklistItem
                   key={subTask.id}
                   task={subTask}
-                  isCompleted={!!taskCompletionStates[subTask.id]} // Get completion from the central state
+                  isCompleted={!!taskCompletionStates[subTask.id]}
                   onToggleCompletion={onToggleCompletion}
                   onImageZoom={onImageZoom}
-                  taskCompletionStates={taskCompletionStates} // Pass down the full state for further recursion
+                  taskCompletionStates={taskCompletionStates}
                   level={level + 1}
                   displayContext="detailPage"
-                  // onNavigate is not needed for sub-tasks
-                  // isStandaloneItem is false for sub-tasks
                 />
               ))}
             </div>
@@ -409,3 +365,5 @@ export function RecursiveChecklistItem({
     </Card>
   );
 }
+
+  
