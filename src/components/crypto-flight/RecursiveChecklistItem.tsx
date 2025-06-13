@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import NextImage from 'next/image';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Info, Square, CheckSquare as CheckSquareIcon, ChevronDown, ChevronRight } from 'lucide-react';
+import { Info, ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -128,11 +128,10 @@ export function RecursiveChecklistItem({
   const [isExpanded, setIsExpanded] = useState(level === 0 && displayContext === 'detailPage' && !isStandaloneItem);
 
   const ActualIcon = task.icon;
-  const DefaultIcon = isCompleted ? CheckSquareIcon : Square;
 
   const taskTitle = task.name || (task.texts && task.texts.length > 0 ? task.texts[0] : 'Unnamed Task');
   
-  const contentTexts = (task.name || isStandaloneItem || displayContext === 'mainPage')
+  const contentTexts = (task.name || isStandaloneItem || displayContext === 'mainPage' || (task.texts && task.texts.length <=1 && !task.name))
     ? task.texts
     : (task.texts && task.texts.length > 1 ? task.texts.slice(1) : []);
 
@@ -151,15 +150,13 @@ export function RecursiveChecklistItem({
     if (displayContext === 'mainPage' && task.slug && onNavigate) {
       onNavigate(task.slug);
     } else if (displayContext === 'detailPage') {
-      // For detail page, clicking the card body toggles completion
-      // This applies to sub-tasks or a standalone main task.
       onToggleCompletion(task.id, !isCompleted);
     }
   };
   
   const hasSubTasks = task.tasks && task.tasks.length > 0;
   const hasOwnContent = 
-    (contentTexts && contentTexts.length > 0) ||
+    (contentTexts && contentTexts.length > 0 && !(contentTexts.length === 1 && contentTexts[0] === taskTitle && task.name === null)) || // Avoid showing title as content if it was already used as title
     (task.videos && task.videos.length > 0) ||
     (task.images && task.images.length > 0) ||
     (task.notes && task.notes.length > 0) ||
@@ -178,9 +175,9 @@ export function RecursiveChecklistItem({
   const showContentArea = displayContext === 'detailPage' && (isExpanded || isStandaloneItem) && (hasOwnContent || (hasSubTasks && !isStandaloneItem));
 
   const shouldShowCheckboxInHeader =
-    displayContext === 'mainPage' || // Always show on main page cards
-    (displayContext === 'detailPage' && isStandaloneItem === true); // On detail page, only show if it's the main task being rendered as a standalone, checkable item.
-                                                                // Sub-tasks listed on a detail page will not get a header checkbox.
+    displayContext === 'mainPage' || 
+    (displayContext === 'detailPage' && isStandaloneItem === true);
+
 
   return (
     <Card
@@ -201,31 +198,36 @@ export function RecursiveChecklistItem({
             )}
             aria-hidden="true"
           />
-        ) : ( (displayContext === 'detailPage' && !isStandaloneItem) || (displayContext === 'detailPage' && isStandaloneItem && !task.icon)) ? ( 
-          // Show default icon for sub-tasks on detail page if no ActualIcon, or for standalone if it has no icon
-          <DefaultIcon
-            className={cn(
-                `shrink-0 h-6 w-6 sm:h-7 sm:w-7`,
-                isCompleted ? 'text-success' : 'text-primary'
-            )}
-            aria-hidden="true"
-          />
-        ): ( 
+        ) : ( // No ActualIcon provided by data; use a visual-only Checkbox or placeholder
+          ( (shouldShowCheckboxInHeader === false) || (isStandaloneItem && !task.icon) ) ? (
+            // Context: Detail page sub-task without its own icon, OR standalone item on detail page that has no icon.
+            // Render a disabled/visual-only Checkbox component to act as the icon.
+            <Checkbox
+              checked={isCompleted}
+              aria-hidden="true"
+              disabled // Makes it non-interactive and visually distinct (e.g., opacity-50)
+              className={cn(
+                `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
+                // Match the size of where ActualIcon/DefaultIcon would have been:
+                `h-6 w-6 sm:h-7 sm:w-7` 
+              )}
+            />
+          ) : (
+            // Fallback placeholder div if no specific icon and no need for checkbox visual here
+            // (e.g., main page item with no icon, but it will have its own interactive checkbox later)
              <div className={cn(
                 `bg-muted/20 rounded shrink-0`,
                 displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10' : 'h-6 w-6 sm:h-7 sm:w-7'
              )} />
+          )
         )}
         <div className="flex-grow">
           <CardTitle 
             className={cn(
               'font-headline',
-              displayContext === 'detailPage' && (level > 0 || (task.name === null && !isStandaloneItem) || isStandaloneItem)
-                ? '!font-normal' 
-                : 'font-semibold', 
               displayContext === 'detailPage' 
-                ? `text-base sm:text-lg` 
-                : 'text-lg sm:text-xl' 
+                ? `!font-normal text-base sm:text-lg` 
+                : 'font-semibold text-lg sm:text-xl' 
             )}
             id={`task-title-${task.id}`}
           >
@@ -277,9 +279,13 @@ export function RecursiveChecklistItem({
         >
           {contentTexts && contentTexts.length > 0 && (
             <div className="mt-2 space-y-1 text-sm text-foreground/90 leading-relaxed">
-              {contentTexts.map((text, index) => (
-                <p key={`text-${index}`} dangerouslySetInnerHTML={{ __html: formatStepText(text) }} />
-              ))}
+              {contentTexts.map((text, index) => {
+                // Avoid rendering the title again if it was the only text and name was null
+                if (task.name === null && task.texts && task.texts.length === 1 && index === 0 && text === taskTitle) {
+                  return null;
+                }
+                return <p key={`text-${index}`} dangerouslySetInnerHTML={{ __html: formatStepText(text) }} />;
+              })}
             </div>
           )}
 
