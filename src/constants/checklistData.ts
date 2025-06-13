@@ -1,18 +1,18 @@
 
 import type { ChecklistItem } from '@/types';
-import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, User, FileText, PlayCircle, ShoppingBag, PartyPopper, CheckSquare, Square } from 'lucide-react';
+import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, User, FileText, PlayCircle, ShoppingBag, PartyPopper, CheckSquare, Square, ShieldCheck } from 'lucide-react';
 
 // Raw data as provided by the user
 const rawChecklistData: ChecklistItem[] =[
   {
-    "id": "1",
+    "id": "getting-started",
     "slug": "getting-started-with-cryptocurrency",
     "name": "Getting Started with Cryptocurrency",
     "icon": PlayCircle,
     "texts": ["Grasp core cryptocurrency concepts, how digital currencies function, and discover Bitcoin's origins and impact."],
     "tasks": [
       {
-        "id": "1-1",
+        "id": "getting-started-video-general",
         "slug": null,
         "name": null,
         "icon": null,
@@ -29,7 +29,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "1-2",
+        "id": "getting-started-video-bitcoin",
         "slug": null,
         "name": null,
         "icon": null,
@@ -48,217 +48,226 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "2",
-    "slug": "creating-crypto-wallet-from-argent-mobile",
-    "name": "Creating Crypto Wallet from Argent Mobile",
-    "icon": WalletCards,
-    "texts": ["Set up your Argent mobile wallet to interact with the Starknet blockchain."],
+    "id": "wallets-mastery",
+    "slug": "mastering-your-crypto-wallets",
+    "name": "Mastering Your Crypto Wallets",
+    "icon": ShieldCheck,
+    "texts": ["Learn how to create and manage different types of cryptocurrency wallets, which are essential tools for interacting with the crypto world."],
     "tasks": [
       {
-        "id": "2-1",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Play Store (for Android) or from the wallet Store (for iOS), search for the 'Argent - Starknet Wallet' app then select the 'Install' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://i.imgur.com/BDfPp0V.jpeg",
-          "https://i.imgur.com/bFAKAvE.jpeg"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
+        "id": "argent-wallet",
+        "slug": "creating-crypto-wallet-from-argent-mobile",
+        "name": "Creating Crypto Wallet from Argent Mobile",
+        "icon": WalletCards,
+        "texts": ["Set up your Argent mobile wallet to interact with the Starknet blockchain."],
+        "tasks": [
+          {
+            "id": "argent-wallet-install",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Play Store (for Android) or from the wallet Store (for iOS), search for the 'Argent - Starknet Wallet' app then select the 'Install' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://i.imgur.com/BDfPp0V.jpeg",
+              "https://i.imgur.com/bFAKAvE.jpeg"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "argent-wallet-open-start",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the Argent wallet is installed on the mobile phone, select the 'Open' button then select the 'Get Started' button to start the registration process."
+            ],
+            "videos": [],
+            "images": [
+              "https://i.imgur.com/2Eu4zZf.jpeg",
+              "https://i.imgur.com/WV3vUFi.jpeg"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "argent-wallet-email-verify",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "First is to enter the required email address when asked then to accept its Terms & Conditions. Open the mail wallet to select the 'Verify email' button from the received email."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "argent-wallet-phone-number",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After verifying the email address, the Argent wallet will now ask for a phone number."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [
+              "While it is recommended to register a phone number, this was skipped for this tutorial. This can be updated later in the Argent wallet."
+            ],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "argent-wallet-notifications",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "To let the Argent wallet send notifications onto the mobile phone, select the 'Enable notifications' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "argent-wallet-recovery",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Select the 'Enable now' button to enable wallet recovery without a seed phrase [1] to complete the registration process."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [
+              "[Coinbase. (n.d.). What is a seed phrase?](https://www.coinbase.com/learn/wallet/what-is-a-seed-phrase) Coinbase Learn."
+            ],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       },
       {
-        "id": "2-2",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the Argent wallet is installed on the mobile phone, select the 'Open' button then select the 'Get Started' button to start the registration process."
-        ],
-        "videos": [],
-        "images": [
-          "https://i.imgur.com/2Eu4zZf.jpeg",
-          "https://i.imgur.com/WV3vUFi.jpeg"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "2-3",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "First is to enter the required email address when asked then to accept its Terms & Conditions. Open the mail wallet to select the 'Verify email' button from the received email."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "2-4",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After verifying the email address, the Argent wallet will now ask for a phone number."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [
-          "While it is recommended to register a phone number, this was skipped for this tutorial. This can be updated later in the Argent wallet."
-        ],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "2-5",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "To let the Argent wallet send notifications onto the mobile phone, select the 'Enable notifications' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "2-6",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Select the 'Enable now' button to enable wallet recovery without a seed phrase [1] to complete the registration process."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [
-          "[Coinbase. (n.d.). What is a seed phrase?](https://www.coinbase.com/learn/wallet/what-is-a-seed-phrase) Coinbase Learn."
-        ],
-        "completed": false,
-        "tasks": []
+        "id": "rabby-wallet",
+        "slug": "creating-crypto-wallet-from-rabby-mobile",
+        "name": "Creating Crypto Wallet from Rabby Mobile",
+        "icon": WalletCards,
+        "texts": ["Create your Rabby mobile wallet, opening doors to the vast Ethereum ecosystem."],
+        "tasks": [
+          {
+            "id": "rabby-wallet-install",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "From the Play Store (for Android) or from the wallet Store (for iOS), search for the 'Rabby Wallet - Crypto & Ethereum' app then select the 'Install' button."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "rabby-wallet-open-create",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "Once the Rabby wallet is installed on the mobile phone, select the 'Open' button then select the 'Create New Address' button to start the registration process. Check the wallet address provided in the 'Confirm Your Address' section then select the 'Confirm' button to proceed."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "rabby-wallet-password-backup",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After confirming the wallet address, provide the password to unlock the Rabby wallet, then select the 'Google Drive Backup' option to back up the seed phrase [1] of the Rabby wallet without writing it down manually."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png",
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [
+              "[Coinbase. (n.d.). What is a seed phrase?](https://www.coinbase.com/learn/wallet/what-is-a-seed-phrase) Coinbase Learn."
+            ],
+            "completed": false,
+            "tasks": []
+          },
+          {
+            "id": "rabby-wallet-done",
+            "slug": null,
+            "name": null,
+            "icon": null,
+            "texts": [
+              "After securing the seed phrase, select the 'Done' button to complete the registration."
+            ],
+            "videos": [],
+            "images": [
+              "https://placehold.co/300x200.png"
+            ],
+            "notes": [],
+            "cites": [],
+            "completed": false,
+            "tasks": []
+          }
+        ]
       }
     ]
   },
   {
-    "id": "3",
-    "slug": "creating-crypto-wallet-from-rabby-mobile",
-    "name": "Creating Crypto Wallet from Rabby Mobile",
-    "icon": WalletCards,
-    "texts": ["Create your Rabby mobile wallet, opening doors to the vast Ethereum ecosystem."],
-    "tasks": [
-      {
-        "id": "3-1",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "From the Play Store (for Android) or from the wallet Store (for iOS), search for the 'Rabby Wallet - Crypto & Ethereum' app then select the 'Install' button."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "3-2",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "Once the Rabby wallet is installed on the mobile phone, select the 'Open' button then select the 'Create New Address' button to start the registration process. Check the wallet address provided in the 'Confirm Your Address' section then select the 'Confirm' button to proceed."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "3-3",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After confirming the wallet address, provide the password to unlock the Rabby wallet, then select the 'Google Drive Backup' option to back up the seed phrase [1] of the Rabby wallet without writing it down manually."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png",
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [
-          "[Coinbase. (n.d.). What is a seed phrase?](https://www.coinbase.com/learn/wallet/what-is-a-seed-phrase) Coinbase Learn."
-        ],
-        "completed": false,
-        "tasks": []
-      },
-      {
-        "id": "3-4",
-        "slug": null,
-        "name": null,
-        "icon": null,
-        "texts": [
-          "After securing the seed phrase, select the 'Done' button to complete the registration."
-        ],
-        "videos": [],
-        "images": [
-          "https://placehold.co/300x200.png"
-        ],
-        "notes": [],
-        "cites": [],
-        "completed": false,
-        "tasks": []
-      }
-    ]
-  },
-  {
-    "id": "4",
+    "id": "faq",
     "slug": "frequently-asked-questions-faqs-in-crypto",
     "name": "Frequently Asked Questions (FAQs) in Crypto",
     "icon": HelpCircle,
     "texts": ["Find answers to common crypto questions and solidify your understanding."],
     "tasks": [
       {
-        "id": "4-1",
+        "id": "faq-what-is-bitcoin",
         "slug": null,
         "name": null,
         "icon": null,
@@ -276,7 +285,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-2",
+        "id": "faq-what-is-wallet",
         "slug": null,
         "name": null,
         "icon": null,
@@ -294,7 +303,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-3",
+        "id": "faq-what-is-seed-phrase",
         "slug": null,
         "name": null,
         "icon": null,
@@ -312,7 +321,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-4",
+        "id": "faq-why-separate-wallets",
         "slug": null,
         "name": null,
         "icon": null,
@@ -328,7 +337,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-5",
+        "id": "faq-what-is-ethereum",
         "slug": null,
         "name": null,
         "icon": null,
@@ -346,7 +355,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-6",
+        "id": "faq-what-is-stablecoin",
         "slug": null,
         "name": null,
         "icon": null,
@@ -367,7 +376,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-7",
+        "id": "faq-gas-fees",
         "slug": null,
         "name": null,
         "icon": null,
@@ -383,7 +392,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-8",
+        "id": "faq-why-many-blockchains",
         "slug": null,
         "name": null,
         "icon": null,
@@ -399,7 +408,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-9",
+        "id": "faq-blockchain-vs-network",
         "slug": null,
         "name": null,
         "icon": null,
@@ -417,7 +426,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "4-10",
+        "id": "faq-should-invest",
         "slug": null,
         "name": null,
         "icon": null,
@@ -435,14 +444,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "5",
+    "id": "buy-ramp",
     "slug": "buying-crypto-from-ramp-network",
     "name": "Buying Crypto From Ramp Network",
     "icon": ShoppingBag,
     "texts": ["Learn to buy crypto using Ramp Network, a service for converting traditional money."],
     "tasks": [
       {
-        "id": "5-1",
+        "id": "buy-ramp-check-address",
         "slug": null,
         "name": null,
         "icon": null,
@@ -465,7 +474,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-2",
+        "id": "buy-ramp-website",
         "slug": null,
         "name": null,
         "icon": null,
@@ -482,7 +491,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-3",
+        "id": "buy-ramp-enter-details",
         "slug": null,
         "name": null,
         "icon": null,
@@ -501,7 +510,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-4",
+        "id": "buy-ramp-register",
         "slug": null,
         "name": null,
         "icon": null,
@@ -518,7 +527,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-5",
+        "id": "buy-ramp-enter-wallet",
         "slug": null,
         "name": null,
         "icon": null,
@@ -535,7 +544,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-6",
+        "id": "buy-ramp-payment-card",
         "slug": null,
         "name": null,
         "icon": null,
@@ -554,7 +563,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-7",
+        "id": "buy-ramp-confirm-order",
         "slug": null,
         "name": null,
         "icon": null,
@@ -571,7 +580,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-8",
+        "id": "buy-ramp-wallet-type",
         "slug": null,
         "name": null,
         "icon": null,
@@ -588,7 +597,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-9",
+        "id": "buy-ramp-kyc",
         "slug": null,
         "name": null,
         "icon": null,
@@ -607,7 +616,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-10",
+        "id": "buy-ramp-security-code",
         "slug": null,
         "name": null,
         "icon": null,
@@ -626,7 +635,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "5-11",
+        "id": "buy-ramp-success",
         "slug": null,
         "name": null,
         "icon": null,
@@ -645,14 +654,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "6",
+    "id": "buy-transak-gcash",
     "slug": "buying-crypto-from-transak-using-gcash",
     "name": "Buying Crypto From Transak using Gcash",
     "icon": CreditCard,
     "texts": ["Purchase crypto via Transak using Gcash for a localized payment experience."],
     "tasks": [
       {
-        "id": "6-1",
+        "id": "buy-transak-check-address",
         "slug": null,
         "name": null,
         "icon": null,
@@ -671,7 +680,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-2",
+        "id": "buy-transak-website",
         "slug": null,
         "name": null,
         "icon": null,
@@ -688,7 +697,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-3",
+        "id": "buy-transak-enter-details",
         "slug": null,
         "name": null,
         "icon": null,
@@ -705,7 +714,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-4",
+        "id": "buy-transak-paste-address",
         "slug": null,
         "name": null,
         "icon": null,
@@ -722,7 +731,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-5",
+        "id": "buy-transak-email",
         "slug": null,
         "name": null,
         "icon": null,
@@ -739,7 +748,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-6",
+        "id": "buy-transak-verify-code",
         "slug": null,
         "name": null,
         "icon": null,
@@ -756,7 +765,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-7",
+        "id": "buy-transak-kyc",
         "slug": null,
         "name": null,
         "icon": null,
@@ -775,7 +784,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-8",
+        "id": "buy-transak-confirm-details",
         "slug": null,
         "name": null,
         "icon": null,
@@ -792,7 +801,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-9",
+        "id": "buy-transak-gcash-qr",
         "slug": null,
         "name": null,
         "icon": null,
@@ -809,7 +818,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "6-10",
+        "id": "buy-transak-success",
         "slug": null,
         "name": null,
         "icon": null,
@@ -828,14 +837,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "7",
+    "id": "bridge-argent",
     "slug": "bridging-crypto-from-argent-mobile",
     "name": "Bridging Crypto From Argent Mobile",
     "icon": ArrowRightLeft,
     "texts": ["Move crypto assets across different blockchains using Argent Mobile's bridging capabilities."],
     "tasks": [
       {
-        "id": "7-1",
+        "id": "bridge-argent-fund-deposit",
         "slug": null,
         "name": null,
         "icon": null,
@@ -852,7 +861,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "7-2",
+        "id": "bridge-argent-select-chain-token",
         "slug": null,
         "name": null,
         "icon": null,
@@ -869,7 +878,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "7-3",
+        "id": "bridge-argent-send-funds",
         "slug": null,
         "name": null,
         "icon": null,
@@ -888,7 +897,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "7-4",
+        "id": "bridge-argent-wait-deposit",
         "slug": null,
         "name": null,
         "icon": null,
@@ -907,14 +916,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "8",
+    "id": "realt-account",
     "slug": "creating-a-realt-account",
     "name": "Creating a RealT Account",
     "icon": User,
     "texts": ["Register on RealT to explore fractional real estate investments via tokens."],
     "tasks": [
       {
-        "id": "8-1",
+        "id": "realt-account-get-started",
         "slug": null,
         "name": null,
         "icon": null,
@@ -931,7 +940,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-2",
+        "id": "realt-account-register-details",
         "slug": null,
         "name": null,
         "icon": null,
@@ -948,7 +957,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-3",
+        "id": "realt-account-activate-email",
         "slug": null,
         "name": null,
         "icon": null,
@@ -965,7 +974,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-4",
+        "id": "realt-account-complete-registration",
         "slug": null,
         "name": null,
         "icon": null,
@@ -984,7 +993,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-5",
+        "id": "realt-account-kyc",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1003,7 +1012,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-6",
+        "id": "realt-account-kyc-success",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1020,7 +1029,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-7",
+        "id": "realt-account-proceed-buy",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1035,7 +1044,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-8",
+        "id": "realt-account-prereq-wallet",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1053,7 +1062,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-9",
+        "id": "realt-account-signin",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1068,7 +1077,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-10",
+        "id": "realt-account-portfolio-link",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1085,7 +1094,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-11",
+        "id": "realt-account-get-wallet",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1104,7 +1113,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-12",
+        "id": "realt-account-social-login",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1121,7 +1130,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-13",
+        "id": "realt-account-copy-address",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1138,7 +1147,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "8-14",
+        "id": "realt-account-rabby-dapps",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1157,14 +1166,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "9",
+    "id": "buy-realt-property",
     "slug": "buying-a-property-from-realt",
     "name": "Buying a Property from RealT",
     "icon": Home,
     "texts": ["Navigate the process of acquiring your first tokenized property on RealT."],
     "tasks": [
       {
-        "id": "9-1",
+        "id": "buy-realt-prereq",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1184,7 +1193,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-2",
+        "id": "buy-realt-signin",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1201,7 +1210,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-3",
+        "id": "buy-realt-add-to-cart",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1218,7 +1227,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-4",
+        "id": "buy-realt-checkout-cart",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1235,7 +1244,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-5",
+        "id": "buy-realt-verify-cart",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1252,7 +1261,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-6",
+        "id": "buy-realt-billing-payment",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1271,7 +1280,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-7",
+        "id": "buy-realt-invoice-email",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1292,7 +1301,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-8",
+        "id": "buy-realt-wallet-setup-link",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1313,7 +1322,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-9",
+        "id": "buy-realt-request-finance-dapp",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1330,7 +1339,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-10",
+        "id": "buy-realt-request-finance-signup",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1349,7 +1358,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-11",
+        "id": "buy-realt-request-finance-verify",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1366,7 +1375,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-12",
+        "id": "buy-realt-request-finance-complete-account",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1385,7 +1394,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-13",
+        "id": "buy-realt-request-finance-bills",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1402,7 +1411,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-14",
+        "id": "buy-realt-request-finance-pay",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1419,7 +1428,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "9-15",
+        "id": "buy-realt-request-finance-confirm-pay",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1438,14 +1447,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "10",
+    "id": "sign-realt-contracts",
     "slug": "signing-contracts-from-realt",
     "name": "Signing Contracts from RealT",
     "icon": FileText,
     "texts": ["Complete your RealT property purchase by digitally signing the required contracts."],
     "tasks": [
       {
-        "id": "10-1",
+        "id": "sign-realt-check-paid",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1462,7 +1471,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "10-2",
+        "id": "sign-realt-tediji-email",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1479,7 +1488,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "10-3",
+        "id": "sign-realt-tediji-review-sign",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1494,7 +1503,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "10-4",
+        "id": "sign-realt-tediji-consent",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1511,7 +1520,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "10-5",
+        "id": "sign-realt-tediji-signature",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1528,7 +1537,7 @@ const rawChecklistData: ChecklistItem[] =[
         "tasks": []
       },
       {
-        "id": "10-6",
+        "id": "sign-realt-tediji-success",
         "slug": null,
         "name": null,
         "icon": null,
@@ -1547,14 +1556,14 @@ const rawChecklistData: ChecklistItem[] =[
     ]
   },
   {
-    "id": "11",
+    "id": "final-step",
     "slug": "welcome-aboard-crypto-native",
     "name": "Welcome aboard, Crypto Native!",
     "icon": PartyPopper,
     "texts": ["You've successfully completed your initial crypto flight, congratulations!"],
     "tasks": [
       {
-        "id": "11-1",
+        "id": "final-step-acknowledge",
         "slug": null,
         "name": null,
         "icon": null,
