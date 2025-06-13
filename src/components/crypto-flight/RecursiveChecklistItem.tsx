@@ -152,11 +152,7 @@ export function RecursiveChecklistItem({
     if (displayContext === 'mainPage' && task.slug && onNavigate) {
       onNavigate(task.slug);
     } else if (displayContext === 'detailPage') {
-      if (!isStandaloneItem && task.tasks && task.tasks.length > 0) {
-         setIsExpanded(!isExpanded);
-      } else {
         onToggleCompletion(task.id, !isCompleted);
-      }
     }
   };
 
@@ -171,7 +167,7 @@ export function RecursiveChecklistItem({
   const cardClassName = cn(
     "mb-4 shadow-lg transition-all duration-300 ease-in-out",
     displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '',
-    (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage' && (isStandaloneItem || !hasSubTasks || !ActualIcon )) ? 'cursor-pointer' : '',
+    (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage') ? 'cursor-pointer' : '',
     displayContext === 'detailPage' ?
       (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') :
       'bg-card',
@@ -184,12 +180,13 @@ export function RecursiveChecklistItem({
   const checkboxSizeClass = 'h-5 w-5 sm:h-6 sm:w-6';
   const iconSizeClass = displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7';
   
-  const isHeaderItemsStart = displayContext === 'detailPage' && (level > 0 || isStandaloneItem || (task.tasks && task.tasks.length > 0));
+  const isHeaderItemsStart = displayContext === 'detailPage' && (level > 0 || isStandaloneItem || (hasSubTasks && !ActualIcon));
+
 
   const cardTitleClass = cn(
     'font-headline',
     (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || hasSubTasks || (!hasSubTasks && !isStandaloneItem)))
-      ? '!font-normal text-base sm:text-lg'
+      ? 'font-normal text-base sm:text-lg'
       : 'font-semibold text-lg sm:text-xl'
   );
   
@@ -203,7 +200,6 @@ export function RecursiveChecklistItem({
       : "p-4 sm:p-6 pt-0")
     : "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
 
-
   return (
     <Card
       className={cardClassName.trim()}
@@ -216,37 +212,39 @@ export function RecursiveChecklistItem({
           headerPaddingClass,
           displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
-        {ActualIcon ? (
-          <ActualIcon
-            className={cn(
-              `shrink-0`,
-              iconSizeClass,
-              isCompleted ? 'text-success' : 'text-primary',
-              isHeaderItemsStart && 'mt-1'
+        <div className={cn("flex-grow flex items-center space-x-3", isHeaderItemsStart ? 'items-start' : 'items-center')}>
+            {ActualIcon ? (
+            <ActualIcon
+                className={cn(
+                `shrink-0`,
+                iconSizeClass,
+                isCompleted ? 'text-success' : 'text-primary',
+                isHeaderItemsStart && 'mt-1'
+                )}
+                aria-hidden="true"
+            />
+            ) : (
+            <Checkbox
+                id={`task-checkbox-${task.id}`}
+                checked={isCompleted}
+                onCheckedChange={(checked) => {
+                    onToggleCompletion(task.id, typeof checked === 'boolean' ? checked : false);
+                }}
+                onClick={(e) => e.stopPropagation()} 
+                aria-labelledby={`task-title-${task.id}`}
+                className={cn(
+                    `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary mt-1`,
+                    checkboxSizeClass
+                )}
+            />
             )}
-            aria-hidden="true"
-          />
-        ) : (
-           <Checkbox
-            id={`task-checkbox-${task.id}`}
-            checked={isCompleted}
-            onCheckedChange={(checked) => {
-                onToggleCompletion(task.id, typeof checked === 'boolean' ? checked : false);
-            }}
-            aria-labelledby={`task-title-${task.id}`}
-            className={cn(
-                `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary mt-1`,
-                checkboxSizeClass
-            )}
-            onClick={(e) => e.stopPropagation()}
-          />
-        )}
-        <div className="flex-grow">
-          <CardTitle className={cardTitleClass} id={`task-title-${task.id}`}>
-            {taskTitle}
-          </CardTitle>
+            <div className="flex-grow">
+            <CardTitle className={cardTitleClass} id={`task-title-${task.id}`}>
+                {taskTitle}
+            </CardTitle>
+            </div>
         </div>
-         {hasSubTasks && displayContext === 'detailPage' && !isStandaloneItem && (
+        {hasSubTasks && displayContext === 'detailPage' && !isStandaloneItem && (
           <button
             onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded);}}
             className="p-1 text-muted-foreground hover:text-foreground expander-button self-center"
@@ -255,6 +253,21 @@ export function RecursiveChecklistItem({
           >
             {isExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
           </button>
+        )}
+        {displayContext === 'mainPage' && hasSubTasks && (
+            <Checkbox
+                id={`task-main-checkbox-agg-${task.id}`}
+                checked={isCompleted}
+                onCheckedChange={(checkedStatus) => {
+                    onToggleCompletion(task.id, typeof checkedStatus === 'boolean' ? checkedStatus : false);
+                }}
+                onClick={(e) => e.stopPropagation()}
+                className={cn(
+                    `ml-auto shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
+                    checkboxSizeClass 
+                )}
+                aria-label={`Mark main task ${taskTitle} as complete`}
+            />
         )}
       </CardHeader>
 
@@ -301,9 +314,8 @@ export function RecursiveChecklistItem({
             id={`task-content-${task.id}`}
             className={cn(
                 cardContentPaddingClass,
-                (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage')
-                    ? "pt-3" 
-                    : ""
+                 // Removed: (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage') ? "pt-3" : ""
+                (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : ""
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
@@ -403,4 +415,3 @@ export function RecursiveChecklistItem({
     </Card>
   );
 }
-

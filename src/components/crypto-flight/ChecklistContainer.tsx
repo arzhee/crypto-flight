@@ -26,32 +26,44 @@ export function ChecklistContainer() {
     setMounted(true);
     try {
       const storedTopLevelJSON = localStorage.getItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED);
-      const initialTopLevelTasks = storedTopLevelJSON ? new Set(JSON.parse(storedTopLevelJSON) as string[]) : new Set<string>();
+      const initialTopLevelTasksFromStorage = storedTopLevelJSON ? new Set(JSON.parse(storedTopLevelJSON) as string[]) : new Set<string>();
       
       const storedAllItemsJSON = localStorage.getItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE);
       let initialAllItemsCompletion = storedAllItemsJSON ? JSON.parse(storedAllItemsJSON) as Record<string, boolean> : {};
 
-      const seedCompletionStatesRecursive = (tasks: ChecklistItemType[]) => {
+      const seedCompletionStatesRecursive = (tasks: ChecklistItemType[], parentIsStaticallyCompleted = false) => {
         tasks.forEach(task => {
+          const isStaticallyCompleted = parentIsStaticallyCompleted || task.completed === true;
           if (!(task.id in initialAllItemsCompletion)) {
-            initialAllItemsCompletion[task.id] = task.completed === true;
-          }
-          // If a top-level task is statically completed (and not overridden by localStorage), add it to the top-level set.
-          if (checklistData.some(topLevelItem => topLevelItem.id === task.id) && initialAllItemsCompletion[task.id] && !initialTopLevelTasks.has(task.id)) {
-             initialTopLevelTasks.add(task.id);
+            initialAllItemsCompletion[task.id] = isStaticallyCompleted;
           }
           if (task.tasks && task.tasks.length > 0) {
-            seedCompletionStatesRecursive(task.tasks);
+            seedCompletionStatesRecursive(task.tasks, initialAllItemsCompletion[task.id]);
           }
         });
       };
       
       seedCompletionStatesRecursive(initialChecklistItems);
 
-      setCompletedTopLevelTasks(initialTopLevelTasks);
+      // Sync completedTopLevelTasks based on the potentially updated initialAllItemsCompletion
+      const finalInitialTopLevelTasks = new Set<string>();
+      initialChecklistItems.forEach(item => {
+        // A top-level task is complete if its entry in allTaskItemsCompletion is true
+        // OR if it was in the explicitly stored top-level completions (less likely to be needed with new seeding)
+        if (initialAllItemsCompletion[item.id] || initialTopLevelTasksFromStorage.has(item.id)) {
+          finalInitialTopLevelTasks.add(item.id);
+           // Ensure consistency: if top-level is complete, all its descendants in allTaskItemsCompletion should also be true
+           if (initialAllItemsCompletion[item.id]) {
+            const descendantIds = getAllTaskIds([item]).filter(id => id !== item.id);
+            descendantIds.forEach(descId => initialAllItemsCompletion[descId] = true);
+           }
+        }
+      });
+      
+      setCompletedTopLevelTasks(finalInitialTopLevelTasks);
       setAllTaskItemsCompletion(initialAllItemsCompletion);
       
-      localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(initialTopLevelTasks)));
+      localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(finalInitialTopLevelTasks)));
       localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(initialAllItemsCompletion));
 
     } catch (error) {
@@ -69,34 +81,58 @@ export function ChecklistContainer() {
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
-  }, [checklistData]); 
+  }, []); // Run only once on mount to load and seed
 
   useEffect(() => {
     if (mounted) {
-      try {
-        localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(completedTopLevelTasks)));
-        localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(allTaskItemsCompletion));
+      // Persist states to localStorage
+      localStorage.setItem(LOCAL_STORAGE_KEY_TOP_LEVEL_TASKS_COMPLETED, JSON.stringify(Array.from(completedTopLevelTasks)));
+      localStorage.setItem(LOCAL_STORAGE_KEY_ALL_TASK_ITEMS_COMPLETION_STATE, JSON.stringify(allTaskItemsCompletion));
 
-        const allTopLevelTasksActuallyCompleted = checklistData.length > 0 && checklistData.every(item => completedTopLevelTasks.has(item.id));
-        
-        if (allTopLevelTasksActuallyCompleted) {
-            const modalAlreadyShownThisSession = sessionStorage.getItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
-            if (modalAlreadyShownThisSession !== 'true') {
-                setShowCompletionModal(true);
-                sessionStorage.setItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN, 'true');
-            }
-        } else {
-            setShowCompletionModal(false);
-            sessionStorage.removeItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
+      // Sync completedTopLevelTasks based on allTaskItemsCompletion for accuracy
+      // This ensures that if sub-tasks are completed on detail page, parent on main page reflects this
+      const newTopLevelCompletedFromAllItems = new Set<string>();
+      let derivedTopLevelChanged = false;
+
+      initialChecklistItems.forEach(item => {
+        // A top-level item is considered complete if its corresponding entry in allTaskItemsCompletion is true.
+        // allTaskItemsCompletion[item.id] should be the source of truth, updated by detail page logic.
+        if (allTaskItemsCompletion[item.id]) {
+          newTopLevelCompletedFromAllItems.add(item.id);
         }
-
-      } catch (error) {
-        console.error("Failed to save task completions to local storage or manage session storage:", error);
+      });
+      
+      // Compare and update completedTopLevelTasks if different from what's derived from allTaskItemsCompletion
+      if (newTopLevelCompletedFromAllItems.size !== completedTopLevelTasks.size ||
+          !Array.from(newTopLevelCompletedFromAllItems).every(id => completedTopLevelTasks.has(id))) {
+        setCompletedTopLevelTasks(newTopLevelCompletedFromAllItems);
+        derivedTopLevelChanged = true; // Mark that a change occurred due to derivation
       }
+
+
+      // Confetti logic - based on the most up-to-date completedTopLevelTasks
+      // If derivedTopLevelChanged is true, use newTopLevelCompletedFromAllItems for this check, otherwise completedTopLevelTasks
+      const currentEffectiveTopLevelTasks = derivedTopLevelChanged ? newTopLevelCompletedFromAllItems : completedTopLevelTasks;
+      const allTopLevelTasksActuallyCompleted = checklistData.length > 0 && 
+        checklistData.every(item => currentEffectiveTopLevelTasks.has(item.id));
+      
+      if (allTopLevelTasksActuallyCompleted) {
+          const modalAlreadyShownThisSession = sessionStorage.getItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
+          if (modalAlreadyShownThisSession !== 'true') {
+              setShowCompletionModal(true);
+              sessionStorage.setItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN, 'true');
+          }
+      } else {
+          setShowCompletionModal(false);
+          sessionStorage.removeItem(SESSION_STORAGE_COMPLETION_MODAL_SHOWN);
+      }
+
     }
-  }, [completedTopLevelTasks, allTaskItemsCompletion, mounted, checklistData]);
+  }, [allTaskItemsCompletion, completedTopLevelTasks, mounted, checklistData, initialChecklistItems]);
+
 
   const handleToggleMainTaskComplete = useCallback((taskId: string, isChecked: boolean) => {
+    // This function is called when a top-level task's own checkbox (either left or right side) is clicked on the main page.
     setCompletedTopLevelTasks(prev => {
       const newCompleted = new Set(prev);
       if (isChecked) {
@@ -109,7 +145,8 @@ export function ChecklistContainer() {
 
     setAllTaskItemsCompletion(prevAll => {
       const newAll = { ...prevAll };
-      const taskToUpdate = checklistData.find(item => item.id === taskId);
+      const taskToUpdate = initialChecklistItems.find(item => item.id === taskId);
+      // getAllTaskIds includes the parent task ID itself and all its descendants.
       const idsToUpdate = taskToUpdate ? getAllTaskIds([taskToUpdate]) : [taskId]; 
       
       idsToUpdate.forEach(id => {
@@ -117,7 +154,7 @@ export function ChecklistContainer() {
       });
       return newAll;
     });
-  }, [checklistData]);
+  }, [initialChecklistItems]);
 
   const handleNavigate = useCallback((slug: string) => {
     router.push(`/${slug}`);
@@ -159,7 +196,7 @@ export function ChecklistContainer() {
           style={{ zIndex: 100 }}
         />
       )}
-      <div className="my-6"> {/* Added wrapper for margin */}
+      <div className="my-6">
         <CryptoFlightProgressBar currentStep={completedCount} totalSteps={totalCount} />
       </div>
 
@@ -168,8 +205,8 @@ export function ChecklistContainer() {
           <RecursiveChecklistItem
             key={item.id}
             task={item}
-            isCompleted={completedTopLevelTasks.has(item.id)}
-            onToggleCompletion={handleToggleMainTaskComplete}
+            isCompleted={completedTopLevelTasks.has(item.id)} // This drives the checked state of both left & right checkboxes on main page
+            onToggleCompletion={handleToggleMainTaskComplete} // This is called by both left & right checkboxes
             onImageZoom={() => {}} 
             taskCompletionStates={allTaskItemsCompletion} 
             level={0}
