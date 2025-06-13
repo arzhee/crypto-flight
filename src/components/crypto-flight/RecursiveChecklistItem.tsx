@@ -151,7 +151,14 @@ export function RecursiveChecklistItem({
     if (displayContext === 'mainPage' && task.slug && onNavigate) {
       onNavigate(task.slug);
     } else if (displayContext === 'detailPage') {
-      onToggleCompletion(task.id, !isCompleted);
+      // For detailPage, clicking the card itself toggles completion, unless it's a container with subtasks and not standalone
+      if (!isStandaloneItem && task.tasks && task.tasks.length > 0) {
+        // If it's a container for sub-tasks, expand/collapse it instead of toggling completion
+        // (completion is derived from sub-tasks)
+         setIsExpanded(!isExpanded);
+      } else {
+        onToggleCompletion(task.id, !isCompleted);
+      }
     }
   };
 
@@ -166,7 +173,7 @@ export function RecursiveChecklistItem({
   const cardClassName = cn(
     "mb-4 shadow-lg transition-all duration-300 ease-in-out",
     displayContext === 'mainPage' && isCompleted ? 'opacity-70 ring-2 ring-success' : displayContext === 'mainPage' ? 'hover:shadow-xl hover:scale-[1.01]' : '',
-    (displayContext === 'mainPage' && task.slug) || displayContext === 'detailPage' ? 'cursor-pointer' : '',
+    (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage' && (isStandaloneItem || !hasSubTasks)) ? 'cursor-pointer' : '',
     displayContext === 'detailPage' ?
       (level > 0 || isStandaloneItem ? 'bg-card dark:bg-card p-3 rounded-lg shadow-sm hover:shadow-md' : 'bg-card') :
       'bg-card',
@@ -179,12 +186,13 @@ export function RecursiveChecklistItem({
   const checkboxSizeClass = 'h-5 w-5 sm:h-6 sm:w-6';
   const iconSizeClass = displayContext === 'mainPage' ? 'h-8 w-8 sm:h-10 sm:w-10' : 'h-6 w-6 sm:h-7 sm:w-7';
   
-  const isHeaderItemsStart = (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon));
+  const isHeaderItemsStart = (displayContext === 'detailPage' && (level > 0 || isStandaloneItem || !ActualIcon || (task.tasks && task.tasks.length > 0)));
+
 
   const cardTitleClass = cn(
     'font-headline',
     displayContext === 'detailPage'
-      ? (level > 0 || isStandaloneItem || !ActualIcon) ? '!font-normal text-base sm:text-lg' : 'font-semibold text-lg sm:text-xl'
+      ? (level > 0 || isStandaloneItem || !ActualIcon || (task.tasks && task.tasks.length > 0) ? '!font-normal text-base sm:text-lg' : 'font-semibold text-lg sm:text-xl')
       : 'font-semibold text-lg sm:text-xl'
   );
 
@@ -195,11 +203,11 @@ export function RecursiveChecklistItem({
       aria-label={taskTitle}
     >
       <CardHeader className={cn(
-          "flex flex-row space-x-3 p-4 sm:p-6",
+          "flex flex-row space-x-3",
           isHeaderItemsStart ? 'items-start' : 'items-center',
           displayContext === 'detailPage' ?
-            (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'pb-3 pt-3') :
-            '',
+            (level > 0 || isStandaloneItem ? 'pb-2 pt-2 pl-3 pr-3 sm:pb-3 sm:pt-3 sm:pl-4 sm:pr-4' : 'p-4 sm:p-6 pb-3 pt-3')
+            : 'p-4 sm:p-6',
           displayContext === 'detailPage' && (level > 0 || isStandaloneItem) && isCompleted ? 'bg-success/10 dark:bg-success/20' : ''
       )}>
         {ActualIcon ? (
@@ -224,7 +232,7 @@ export function RecursiveChecklistItem({
                 `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary mt-1`,
                 checkboxSizeClass
             )}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // Prevent card click when checkbox is clicked
           />
         )}
         <div className="flex-grow">
@@ -245,7 +253,7 @@ export function RecursiveChecklistItem({
       </CardHeader>
 
       {displayContext === 'mainPage' && mainPageDescription && !isCompleted && (
-        <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-5 sm:pt-0">
+        <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0">
           <CardDescription className="text-sm sm:text-base leading-relaxed">
             {mainPageDescription}
           </CardDescription>
@@ -256,19 +264,32 @@ export function RecursiveChecklistItem({
         <CardContent
             id={`task-content-${task.id}`}
             className={cn(
+                // Base padding (excluding top for the specific case B.1)
                 (displayContext === 'detailPage' && (level > 0 || isStandaloneItem))
-                    ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4"
-                    : "p-4 sm:p-6",
+                    ? "pl-10 pr-4 pb-3 sm:pl-12 sm:pr-6 sm:pb-4" // A: No top padding defined here, will be added by next block
+                    : (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent)
+                        ? "px-4 pb-4 sm:px-6 sm:pb-6" // B.1 - Case for task-1-1 (no top padding in this base part)
+                        : "p-4 sm:p-6",               // B.2 - Other cases (e.g. main page, or detail level 0 without own content but with subtasks)
+
+                // Top padding logic
                 (displayContext === 'detailPage' && level === 0 && !isStandaloneItem && hasOwnContent)
-                    ? "pt-0"
-                    : ( (displayContext === 'detailPage' && (level > 0 || isStandaloneItem)) ? "pt-3" : "pt-0"),
+                    ? "pt-0" // C - Add pt-0 for task-1-1 (targets B.1 base)
+                    : (displayContext === 'detailPage' && (level > 0 || isStandaloneItem))
+                        ? "pt-3" // D1 - Add pt-3 for nested/standalone (targets A base)
+                        : (displayContext !== 'detailPage' ? "pt-0" : ""), // D2 - Add pt-0 for mainPage (targets B.2 base if B.2 is p-X)
+                                                                        // If B.2 is already specific like px-X pb-X pt-0, this is fine.
+                                                                        // If B.2 is just p-X, then this pt-0 is necessary for mainPage.
+                                                                        // For mainPage, B.2 is "p-4 sm:p-6", so "pt-0" here is correct.
+                
+                // Additional top padding for sub-task containers that are themselves nested or standalone
+                // and have sub-tasks but no direct content of their own.
                 (hasSubTasks && !isStandaloneItem && (level > 0 || isStandaloneItem)) && !(hasOwnContent && displayContext === 'detailPage')
-                    ? "pt-3"
+                    ? "pt-3" // E
                     : ""
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
-            <div className={cn("space-y-1 text-sm text-foreground/90 leading-relaxed", level > 0 || isStandaloneItem ? "mt-0" : "mt-2")}>
+            <div className={cn("space-y-1 text-sm text-foreground/90 leading-relaxed")}>
               {contentTexts.map((text, index) => (
                 <p key={`text-${index}`} dangerouslySetInnerHTML={{ __html: formatStepText(text) }} />
               ))}
@@ -276,7 +297,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.videos && task.videos.length > 0 && (
-            <div className="mt-3 space-y-3">
+            <div className="mt-2 space-y-3">
               {task.videos.map((videoUrl, index) => {
                 const embedUrl = getYouTubeEmbedUrl(videoUrl);
                 return embedUrl ? (
@@ -329,7 +350,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.cites && task.cites.length > 0 && (
-            <div className="mt-4 pt-3 border-t border-muted/30">
+            <div className="mt-2 pt-2 border-t border-muted/30">
               <ul className="list-none pl-0 space-y-1">
                 {task.cites.map((cite, citeIndex) => (
                   <li
