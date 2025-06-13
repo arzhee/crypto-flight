@@ -171,17 +171,19 @@ export function RecursiveChecklistItem({
   const cursorClasses = (displayContext === 'mainPage' && task.slug) || (displayContext === 'detailPage' && (!isStandaloneItem || !hasSubTasks) ) ? 'cursor-pointer' : '';
   
   let detailPageSpecificClasses = 'bg-card';
-  if (displayContext === 'detailPage') {
-    if (isStandaloneItem) {
-      detailPageSpecificClasses = 'bg-card'; 
-    } else { 
-      if (level > 0) { 
-        detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30 p-3 rounded-lg shadow-sm hover:shadow-md';
-      } else { 
-        detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30'; 
-      }
+  if (displayContext === 'detailPage' && !isStandaloneItem) { // It's a sub-task card on the detail page
+    if (isCompleted) {
+      detailPageSpecificClasses = 'bg-success/10 dark:bg-success/20';
+    } else {
+      detailPageSpecificClasses = 'bg-muted/50 dark:bg-muted/30';
     }
+    if (level > 0) { // Specific styles for *nested* sub-task cards
+      detailPageSpecificClasses = cn(detailPageSpecificClasses, 'p-3 rounded-lg shadow-sm hover:shadow-md');
+    }
+  } else if (displayContext === 'detailPage' && isStandaloneItem) {
+    detailPageSpecificClasses = 'bg-card';
   }
+
 
   const cardClassName = cn(
     cardBaseClasses,
@@ -220,7 +222,7 @@ export function RecursiveChecklistItem({
       cardContentPaddingClass = "pl-10 pr-4 pb-3 pt-3 sm:pl-12 sm:pr-6 sm:pb-4";
     } else if (level === 0 && !isStandaloneItem) { 
        if (hasOwnContent) {
-         cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0";
+         cardContentPaddingClass = "px-4 pb-4 pt-0 sm:px-6 sm:pb-6 sm:pt-0"; // Keep pt-0 for direct child own content
        } else if (hasSubTasks) { 
           cardContentPaddingClass = "p-4 sm:p-6 pt-0"; 
        }
@@ -237,8 +239,7 @@ export function RecursiveChecklistItem({
       <CardHeader className={cn(
           "flex flex-row space-x-3",
           isHeaderItemsStart ? 'items-start' : 'items-center',
-          headerPaddingClass,
-          displayContext === 'detailPage' && !isStandaloneItem && isCompleted ? 'bg-success/5 dark:bg-success/15' : ''
+          headerPaddingClass
       )}>
         <div className={cn("flex-grow flex space-x-3", isHeaderItemsStart ? 'items-start' : 'items-center')}>
             {ActualIcon ? (
@@ -261,7 +262,7 @@ export function RecursiveChecklistItem({
                 onClick={(e) => e.stopPropagation()} 
                 aria-labelledby={`task-title-${task.id}`}
                 className={cn(
-                    `shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary mt-1`,
+                    `mt-1 shrink-0 border-2 data-[state=checked]:bg-success data-[state=checked]:border-success data-[state=checked]:text-success-foreground focus-visible:ring-primary`,
                     checkboxSizeClass
                 )}
             />
@@ -342,8 +343,7 @@ export function RecursiveChecklistItem({
             id={`task-content-${task.id}`}
             className={cn(
                 cardContentPaddingClass,
-                (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : "",
-                isCompleted && !isStandaloneItem ? 'bg-success/5 dark:bg-success/15' : ''
+                (level > 0 || isStandaloneItem || (hasSubTasks && !isStandaloneItem && !hasOwnContent)) ? "pt-3" : ""
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
@@ -443,4 +443,3 @@ export function RecursiveChecklistItem({
     </Card>
   );
 }
-
