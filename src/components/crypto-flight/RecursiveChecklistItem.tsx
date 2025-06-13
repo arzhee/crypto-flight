@@ -310,7 +310,7 @@ export function RecursiveChecklistItem({
             )}
         >
           {contentTexts && contentTexts.length > 0 && (
-            <div className="mt-2 space-y-1 text-sm text-foreground/90 leading-relaxed">
+            <div className="space-y-1 text-sm text-foreground/90 leading-relaxed">
               {contentTexts.map((text, index) => (
                 <p key={`text-${index}`} dangerouslySetInnerHTML={{ __html: formatStepText(text) }} />
               ))}
@@ -371,7 +371,7 @@ export function RecursiveChecklistItem({
           )}
 
           {task.cites && task.cites.length > 0 && (
-            <div className="mt-4 pt-3 border-t border-muted/30">
+            <div className="mt-3 pt-1 border-t border-muted/30">
               <ul className="list-none pl-0 space-y-1">
                 {task.cites.map((cite, citeIndex) => (
                   <li
