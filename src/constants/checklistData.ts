@@ -13,10 +13,22 @@ export const initialChecklistItems: ChecklistItem[] =[
       {
         "id": "1-step-1",
         "texts": [
-          "To learn more about crypto in general, how it works, and the history of Bitcoin, kindly watch the following videos below."
+          "Watch this video to learn about cryptocurrency in general and how it works."
         ],
         "videos": [
-          "https://www.youtube.com/watch?v=Zoz9gvhLgpM",
+          "https://www.youtube.com/watch?v=Zoz9gvhLgpM"
+        ],
+        "images": [],
+        "notes": [],
+        "cites": [],
+        "completed": false
+      },
+      {
+        "id": "1-step-2",
+        "texts": [
+          "Watch this video to understand the history and significance of Bitcoin."
+        ],
+        "videos": [
           "https://www.youtube.com/watch?v=41JCpzvnn_0"
         ],
         "images": [],
@@ -1228,3 +1240,4 @@ export const initialChecklistItems: ChecklistItem[] =[
     ]
   }
 ];
+
