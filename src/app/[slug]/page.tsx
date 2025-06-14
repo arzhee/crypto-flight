@@ -288,7 +288,7 @@ export default function TaskDetailPage() {
     <main className="min-h-screen flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8 bg-background">
       <div className="w-full max-w-2xl">
         <AppHeader />
-        <div className="my-6"> {/* Added wrapper for margin */}
+        <div className="my-6"> 
           <CryptoFlightProgressBar currentStep={completedTopLevelTaskCount} totalSteps={totalTopLevelTaskCount} />
         </div>
 
