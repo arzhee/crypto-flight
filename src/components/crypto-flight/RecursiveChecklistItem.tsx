@@ -157,19 +157,20 @@ export function RecursiveChecklistItem({
 
   const itemDescriptionForContent = useMemo(() => {
     if (isMainTaskStyle) {
-      if (task.name && task.texts && task.texts.length > 0) { // Name is title, texts[0] is desc
+      if (task.name && task.texts && task.texts.length > 0) {
         return task.texts[0];
       }
-      if (!task.name && task.texts && task.texts.length > 1) { // texts[0] was title, texts[1] is desc
+      if (!task.name && task.texts && task.texts.length > 1) {
         return task.texts[1];
       }
     }
     return null;
   }, [task.name, task.texts, isMainTaskStyle]);
 
+
   const descriptionForSimpleHeader = useMemo(() => {
     if (!isMainTaskStyle && task.name && task.texts && task.texts.length > 0) {
-      return task.texts[0];
+        return task.texts[0];
     }
     return null;
   }, [isMainTaskStyle, task.name, task.texts]);
@@ -177,10 +178,9 @@ export function RecursiveChecklistItem({
 
   const bodyContentTexts = useMemo(() => {
     if (displayContext === 'detailPage' && !isMainTaskStyle && (isExpandedForSimpleDetailItem || !hasSubTasks)) {
-      if (task.name) { // task.name was title
-        // if descriptionForSimpleHeader took texts[0], body starts from texts[1]
+      if (task.name) {
         return descriptionForSimpleHeader === task.texts?.[0] ? (task.texts || []).slice(1) : (task.texts || []);
-      } else if (task.texts && task.texts.length > 0) { // task.texts[0] was title (via taskTitle)
+      } else if (task.texts && task.texts.length > 0) {
         return task.texts.slice(1);
       }
       return [];
@@ -498,7 +498,7 @@ export function RecursiveChecklistItem({
           )}
 
           {isSimpleExpandableDetailItem && isExpandedForSimpleDetailItem && task.tasks && task.tasks.length > 0 && (
-            <div className="mt-4 space-y-3">
+            <div className="space-y-3">
               {task.tasks.map((subTask) => (
                 <RecursiveChecklistItem
                   key={subTask.id}
