@@ -292,7 +292,7 @@ export default function TaskDetailPage() {
           <CryptoFlightProgressBar currentStep={completedTopLevelTaskCount} totalSteps={totalTopLevelTaskCount} />
         </div>
 
-        <Card className="shadow-xl w-full mt-6 flex flex-col max-h-[calc(100vh-14rem)] sm:max-h-[calc(100vh-12rem)]">
+        <Card className="shadow-xl w-full mt-6 flex flex-col">
           <CardHeader className="flex flex-row items-start space-x-4 p-4 sm:p-6">
             {MainIcon && <MainIcon className={`h-10 w-10 ${isThisMainTaskMarkedCompleteInTopLevelStorage ? 'text-success' : 'text-primary'} mt-1 shrink-0`} aria-hidden="true" />}
             <div className="flex-grow">
@@ -304,7 +304,7 @@ export default function TaskDetailPage() {
               )}
             </div>
           </CardHeader>
-          <CardContent className="px-4 pb-3 sm:px-6 sm:pb-4 flex-grow overflow-y-auto">
+          <CardContent className="px-4 pb-3 sm:px-6 sm:pb-4 flex-grow">
             {(mainTask.tasks && mainTask.tasks.length > 0) ? (
               <div className="space-y-4">
                 {mainTask.tasks.map((subTask) => (
