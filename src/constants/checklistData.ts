@@ -1,6 +1,6 @@
 
 import type { ChecklistItem } from '@/types';
-import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, User, FileText, PlayCircle, ShoppingBag, PartyPopper, CheckSquare, Square, ShieldCheck } from 'lucide-react';
+import { WalletCards, HelpCircle, Bitcoin, CreditCard, ArrowRightLeft, Home, User, FileText, PlayCircle, ShoppingBag, PartyPopper, ShieldCheck } from 'lucide-react';
 
 // Raw data as provided by the user
 const rawChecklistData: ChecklistItem[] =[
@@ -9,7 +9,7 @@ const rawChecklistData: ChecklistItem[] =[
     "slug": "getting-started-with-cryptocurrency",
     "name": "Getting Started with Cryptocurrency",
     "icon": PlayCircle,
-    "texts": ["Grasp core cryptocurrency concepts, how digital currencies function, and discover Bitcoin's origins and impact."],
+    "texts": ["Uncover the fundamentals of cryptocurrency, learn how digital money works, and explore the groundbreaking origins and significance of Bitcoin."],
     "tasks": [
       {
         "id": "getting-started-video-general",
@@ -52,7 +52,7 @@ const rawChecklistData: ChecklistItem[] =[
     "slug": "mastering-your-crypto-wallets",
     "name": "Mastering Your Crypto Wallets",
     "icon": ShieldCheck,
-    "texts": ["Learn how to create and manage different types of cryptocurrency wallets, which are essential tools for interacting with the crypto world."],
+    "texts": ["Become proficient in setting up and managing various crypto wallets—your essential gateway to the digital currency ecosystem and cross-chain interactions."],
     "tasks": [
       {
         "id": "argent-wallet",
@@ -343,7 +343,7 @@ const rawChecklistData: ChecklistItem[] =[
     "slug": "frequently-asked-questions-faqs-in-crypto",
     "name": "Frequently Asked Questions (FAQs) in Crypto",
     "icon": HelpCircle,
-    "texts": ["Find answers to common crypto questions and solidify your understanding."],
+    "texts": ["Get clear answers to common cryptocurrency questions to deepen your knowledge and navigate the crypto space with confidence."],
     "tasks": [
       {
         "id": "faq-what-is-bitcoin",
@@ -527,7 +527,7 @@ const rawChecklistData: ChecklistItem[] =[
     "slug": "managing-crypto-purchases",
     "name": "Managing Crypto Purchases",
     "icon": ShoppingBag,
-    "texts": ["Understand different methods to buy cryptocurrencies using fiat money."],
+    "texts": ["Discover various methods for purchasing cryptocurrencies with traditional money, including direct card payments and local payment options."],
     "videos": [],
     "images": [],
     "notes": [],
@@ -538,7 +538,7 @@ const rawChecklistData: ChecklistItem[] =[
         "id": "buy-ramp",
         "slug": "buying-crypto-from-ramp-network",
         "name": "Buying Crypto From Ramp Network",
-        "icon": ShoppingBag,
+        "icon": ShoppingBag, 
         "texts": ["Learn to buy crypto using Ramp Network, a service for converting traditional money."],
         "tasks": [
           {
@@ -934,7 +934,7 @@ const rawChecklistData: ChecklistItem[] =[
     "slug": "exploring-rwa-realt",
     "name": "Exploring Real World Assets (RWA) with RealT",
     "icon": Home,
-    "texts": ["Dive into tokenized real estate investments with RealT, bridging digital assets with tangible property."],
+    "texts": ["Explore the innovative world of tokenized real estate with RealT, learning how to invest in tangible properties through digital assets."],
     "videos": [],
     "images": [],
     "notes": [],
@@ -1588,7 +1588,7 @@ const rawChecklistData: ChecklistItem[] =[
     "slug": "welcome-aboard-crypto-native",
     "name": "Welcome aboard, Crypto Native!",
     "icon": PartyPopper,
-    "texts": ["You've successfully completed your initial crypto flight, congratulations!"],
+    "texts": ["Congratulations, Crypto Pilot! You've successfully navigated your first flight into the world of cryptocurrency. Continue your journey with curiosity and confidence!"],
     "tasks": [
       {
         "id": "final-step-acknowledge",
