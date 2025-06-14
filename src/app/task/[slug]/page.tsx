@@ -105,7 +105,7 @@ const TaskStepImage: React.FC<TaskStepImageProps> = ({ imageUrl, altText, onImag
         sizes="(max-width: 640px) 100vw, 300px"
         priority={priority}
         data-ai-hint={aiHint}
-        onLoadingComplete={() => setIsLoading(false)}
+        onLoad={() => setIsLoading(false)}
         onError={() => setIsLoading(false)} 
       />
     </div>
@@ -406,7 +406,7 @@ export default function TaskDetailPage() {
                           )}
 
                           {step.images && step.images.length > 0 && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
+                            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 place-items-center sm:place-items-start">
                               {step.images.map((imageUrl, index) => {
                                 let aiHintForImage = imageUrl.startsWith('https://placehold.co') ? "placeholder image" : "task illustration";
                                 return (
@@ -526,5 +526,3 @@ export default function TaskDetailPage() {
     </main>
   );
 }
-
-    
